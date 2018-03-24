@@ -128,7 +128,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="144" max="32767" attributes="0"/>
+                          <EmptySpace pref="143" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="panel_chart" min="-2" max="-2" attributes="0"/>
                               <Component id="panel_laporan" min="-2" max="-2" attributes="0"/>
@@ -136,7 +136,7 @@
                               <Component id="panel_akun" min="-2" max="-2" attributes="0"/>
                               <Component id="panel_pegawai" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="197" max="-2" attributes="0"/>
+                          <EmptySpace pref="198" max="32767" attributes="0"/>
                           <Component id="btn_logout" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
@@ -586,9 +586,9 @@
                               </Group>
                               <Component id="jScrollPane1" alignment="0" min="-2" pref="437" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="12" max="32767" attributes="0"/>
                           <Component id="btn_back_pegawai" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -770,7 +770,7 @@
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                       <Color blue="3d" green="37" red="32" type="rgb"/>
                     </Property>
-                    <Property name="dateFormatString" type="java.lang.String" value="dd-MMM-yyyy"/>
+                    <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmb_posisi_pegawai">
@@ -906,6 +906,9 @@
                       <Color id="Hand Cursor"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_hapus_pegawaiMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -942,7 +945,7 @@
                                           <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="txt_username_akun" linkSize="9" alignment="0" pref="497" max="32767" attributes="0"/>
-                                              <Component id="txt_id_kamar" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="txt_id_akun" alignment="0" max="32767" attributes="0"/>
                                               <Component id="txt_password_akun" linkSize="9" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
@@ -973,7 +976,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="2" attributes="0">
                                       <Component id="jLabel62" alignment="2" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txt_id_kamar" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
+                                      <Component id="txt_id_akun" alignment="2" min="-2" pref="35" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
@@ -1064,7 +1067,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="javax.swing.JTextField" name="txt_id_kamar">
+                <Component class="javax.swing.JTextField" name="txt_id_akun">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="15" style="0"/>
@@ -1201,6 +1204,10 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="kamarMouseClicked"/>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="kamarMouseEntered"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
                   <CardConstraints cardName="card3"/>
@@ -1225,7 +1232,7 @@
                                           </Group>
                                           <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="cmb_tipei_kamar" alignment="0" pref="492" max="32767" attributes="0"/>
+                                              <Component id="cmb_tipe_kamar" alignment="0" pref="492" max="32767" attributes="0"/>
                                               <Component id="txt_lantai_kamar" alignment="0" max="32767" attributes="0"/>
                                               <Component id="txt_nomor_kamar" alignment="0" max="32767" attributes="0"/>
                                               <Component id="cmb_status_kamar" alignment="0" pref="492" max="32767" attributes="0"/>
@@ -1267,7 +1274,7 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="2" attributes="0">
-                                      <Component id="cmb_tipei_kamar" linkSize="13" alignment="2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cmb_tipe_kamar" linkSize="13" alignment="2" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel24" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -1325,7 +1332,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tb_pegawai1">
+                    <Component class="javax.swing.JTable" name="tb_kamar">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                           <Table columnCount="4" rowCount="0">
@@ -1363,6 +1370,9 @@
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tb_kamarMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1400,21 +1410,22 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cmb_tipei_kamar">
+                <Component class="javax.swing.JComboBox" name="cmb_tipe_kamar">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Tahoma" size="12" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="3">
-                        <StringItem index="0" value="Superior Room"/>
-                        <StringItem index="1" value="Deluxe Room"/>
-                        <StringItem index="2" value="Family Room"/>
+                      <StringArray count="4">
+                        <StringItem index="0" value="     "/>
+                        <StringItem index="1" value="Superior Room"/>
+                        <StringItem index="2" value="Deluxe Room"/>
+                        <StringItem index="3" value="Family Room"/>
                       </StringArray>
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmb_tipei_kamarActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmb_tipe_kamarActionPerformed"/>
                   </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -1470,6 +1481,9 @@
                       <Color id="Hand Cursor"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_save_kamarMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="btn_edit_kamar">
                   <Properties>
@@ -1489,6 +1503,9 @@
                       <Color id="Hand Cursor"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_edit_kamarMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="btn_hapus_kamar">
                   <Properties>
@@ -1508,6 +1525,9 @@
                       <Color id="Hand Cursor"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_hapus_kamarMouseClicked"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmb_status_kamar">
                   <Properties>
@@ -1515,9 +1535,10 @@
                       <Font name="Tahoma" size="12" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Kosong"/>
-                        <StringItem index="1" value="Terisi"/>
+                      <StringArray count="3">
+                        <StringItem index="0" value="     "/>
+                        <StringItem index="1" value="Kosong"/>
+                        <StringItem index="2" value="Terisi"/>
                       </StringArray>
                     </Property>
                   </Properties>

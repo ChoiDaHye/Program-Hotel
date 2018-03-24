@@ -20,7 +20,9 @@ import com.hotel.dao.*;
  * @author Gedalya Anugrah
  */
 public class ADMIN extends javax.swing.JFrame {
-
+    java.sql.Date sqldate;
+    java.util.Date Date;
+    
     /**
      * Creates new form ADMIN
      */
@@ -28,7 +30,7 @@ public class ADMIN extends javax.swing.JFrame {
         initComponents();
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
     }
-    
+
     void setColor(JPanel panel) {
         panel.setBackground(new Color(240, 240, 240));
     }
@@ -36,14 +38,183 @@ public class ADMIN extends javax.swing.JFrame {
     void resetColor(JPanel panel) {
         panel.setBackground(new Color(255, 255, 255));
     }
-    
-    void toMenu(){
+
+    void toMenu() {
         menu.setVisible(true);
-        pegawai.setVisible(false);        
+        pegawai.setVisible(false);
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(false);
         diagram.setVisible(false);
+    }
+
+    //DATA KAMAR
+    void tampil_kamar() {
+        DefaultTableModel dt;
+        Object[] baris = {"Nomor Kamar", "Lantai", "Tipe", "Status"};
+        dt = new DefaultTableModel(null, baris);
+        tb_kamar.setModel(dt);
+        String sql = "SELECT * FROM tb_kamar ORDER BY id_kamar";
+
+        try {
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st = konek.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                String NOMOR = rs.getString("id_kamar");
+                String LANTAI = rs.getString("lantai");
+                String TIPE = "";
+                if(rs.getString("id_tipe").equals("1")){
+                    TIPE = "SUPERIOR ROOM";
+                }
+                if(rs.getString("id_tipe").equals("2")){
+                    TIPE = "DELUXE ROOM";
+                }
+                if(rs.getString("id_tipe").equals("3")){
+                    TIPE = "FAMILY ROOM";
+                }
+                
+                String STATUS = "";
+                if(rs.getString("status").equals("1")){
+                    STATUS = "Kosong";
+                }
+                if(rs.getString("status").equals("2")){
+                    STATUS = "Terisi";
+                }
+
+                String[] data = {NOMOR, LANTAI, TIPE, STATUS};
+                dt.addRow(data);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    void tulis_kamar() {
+        try {
+            if (txt_nomor_kamar.getText().isEmpty() || 
+                txt_lantai_kamar.getText().isEmpty() || 
+                cmb_tipe_kamar.getSelectedIndex() == 0 ||
+                cmb_status_kamar.getSelectedIndex() == 0
+                )
+            {
+                JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
+                if (txt_nomor_kamar.getText().isEmpty()) {
+                    txt_nomor_kamar.requestFocus();
+                } else if (txt_lantai_kamar.getText().isEmpty()) {
+                    txt_lantai_kamar.requestFocus();
+                } else if (cmb_tipe_kamar.getSelectedIndex() == 0){
+                    cmb_tipe_kamar.requestFocus();
+                } else if (cmb_status_kamar.getSelectedIndex() == 0){
+                    cmb_status_kamar.requestFocus();
+                }
+            } else {
+                try {
+                    Connection konek = new com.hotel.script.koneksi().getCon();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Tidak Dapat Terhubung ke Database! " + e);
+                }
+
+                admin_kamar_dao dao = new admin_kamar_dao();
+                admin_kamar_getset gs = new admin_kamar_getset();
+                
+                gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
+                gs.setLantai(Integer.parseInt(txt_lantai_kamar.getText()));
+                
+                gs.setTipe(cmb_tipe_kamar.getSelectedIndex());
+                gs.setStatus(cmb_status_kamar.getSelectedIndex());
+
+                dao.masukDataKamar(gs);
+                tampil_kamar();
+            }
+            txt_nomor_kamar.setText("");
+            txt_lantai_kamar.setText("");
+            cmb_tipe_kamar.setSelectedIndex(0);
+            cmb_status_kamar.setSelectedIndex(0);
+
+            txt_id_akun.requestFocus();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Kegagalan Sistem!\n" + e);
+        }
+    }
+    
+    void ubah_kamar() {
+        try {
+            if (txt_nomor_kamar.getText().isEmpty() || 
+                txt_lantai_kamar.getText().isEmpty() || 
+                cmb_tipe_kamar.getSelectedIndex() == 0 ||
+                cmb_status_kamar.getSelectedIndex() == 0
+                )
+            {
+                JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
+                if (txt_nomor_kamar.getText().isEmpty()) {
+                    txt_nomor_kamar.requestFocus();
+                } else if (txt_lantai_kamar.getText().isEmpty()) {
+                    txt_lantai_kamar.requestFocus();
+                } else if (cmb_tipe_kamar.getSelectedIndex() == 0){
+                    cmb_tipe_kamar.requestFocus();
+                } else if (cmb_status_kamar.getSelectedIndex() == 0){
+                    cmb_status_kamar.requestFocus();
+                }
+            } else {
+                try {
+                    Connection konek = new com.hotel.script.koneksi().getCon();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Tidak Dapat Terhubung ke Database! " + e);
+                }
+
+                admin_kamar_dao dao = new admin_kamar_dao();
+                admin_kamar_getset gs = new admin_kamar_getset();
+                
+                gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
+                gs.setLantai(Integer.parseInt(txt_lantai_kamar.getText()));
+                
+                gs.setTipe(cmb_tipe_kamar.getSelectedIndex());
+                gs.setStatus(cmb_status_kamar.getSelectedIndex());
+
+                dao.ubahDataKamar(gs);
+                tampil_kamar();
+            }
+            txt_nomor_kamar.setText("");
+            txt_lantai_kamar.setText("");
+            cmb_tipe_kamar.setSelectedIndex(0);
+            cmb_status_kamar.setSelectedIndex(0);
+
+            btn_save_kamar.setVisible(true);
+            txt_nomor_kamar.setEditable(true);
+            txt_nomor_kamar.requestFocus();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Kegagalan Sistem!\n" + e);
+        }
+    }
+
+    public void klik_kamar() {
+        btn_save_kamar.setVisible(false);
+        int row = tb_kamar.getSelectedRow();
+        int tipe = 0;
+        int status = 0;
+        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("SUPERIOR ROOM")){
+            tipe = 1;
+        }
+        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("DELUXE ROOM")){
+            tipe = 2;
+        }
+        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("FAMILY ROOM")){
+            tipe = 3;
+        }
+        
+        if(tb_kamar.getModel().getValueAt(row, 3).toString().equals("Kosong")){
+            status = 1;
+        }
+        if(tb_kamar.getModel().getValueAt(row, 3).toString().equals("Terisi")){
+            status = 2;
+        }
+        
+        txt_nomor_kamar.setText(tb_kamar.getModel().getValueAt(row, 0).toString());
+        txt_nomor_kamar.setEditable(false);
+        txt_lantai_kamar.setText(tb_kamar.getModel().getValueAt(row, 1).toString());
+        txt_lantai_kamar.setEditable(false);
+        cmb_tipe_kamar.setSelectedIndex(tipe);
+        cmb_status_kamar.setSelectedIndex(status);
     }
     
     // DATA PEGAWAI
@@ -74,24 +245,24 @@ public class ADMIN extends javax.swing.JFrame {
     }
 
     void tulis_pegawai() {
-        SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String date = dFormat.format(txt_date_pegawai.getDate());
-        
         try {
             rdo_lk.setActionCommand("L");
             rdo_pr.setActionCommand("P");
 
-            if (txt_id_pegawai.getText().isEmpty() || 
-                txt_nama_pegawai.getText().isEmpty() || 
-                txt_alamat_pegawai.getText().isEmpty() || 
-                cmb_posisi_pegawai.getSelectedItem().toString().isEmpty() || 
-                gender_group.getSelection().getActionCommand().isEmpty() || 
-                txt_date_pegawai.getDateFormatString().isEmpty())
-            {
+            if (txt_id_pegawai.getText().isEmpty()
+                    || txt_nama_pegawai.getText().isEmpty()
+                    || txt_alamat_pegawai.getText().isEmpty()
+                    || cmb_posisi_pegawai.getSelectedItem().toString().isEmpty()
+                    || gender_group.getSelection().getActionCommand().isEmpty()
+                    || txt_date_pegawai.getDateFormatString().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
-                if      (txt_id_pegawai.getText().isEmpty())        {txt_id_pegawai.requestFocus();} 
-                else if (txt_nama_pegawai.getText().isEmpty())      {txt_nama_pegawai.requestFocus();} 
-                else if (txt_alamat_pegawai.getText().isEmpty())    {txt_alamat_pegawai.requestFocus();} 
+                if (txt_id_pegawai.getText().isEmpty()) {
+                    txt_id_pegawai.requestFocus();
+                } else if (txt_nama_pegawai.getText().isEmpty()) {
+                    txt_nama_pegawai.requestFocus();
+                } else if (txt_alamat_pegawai.getText().isEmpty()) {
+                    txt_alamat_pegawai.requestFocus();
+                }
             } else {
                 try {
                     Connection konek = new com.hotel.script.koneksi().getCon();
@@ -103,18 +274,18 @@ public class ADMIN extends javax.swing.JFrame {
                 admin_pegawai_getset gs = new admin_pegawai_getset();
                 gs.setId_pegawai(txt_id_pegawai.getText());
                 gs.setNama_pegawai(txt_nama_pegawai.getText());
-                gs.setTl_pegawai(date);
+                gs.setTl_pegawai(txt_date_pegawai.getDateFormatString());
                 gs.setAlamat_pegawai(txt_alamat_pegawai.getText());
                 gs.setPosisi_pegawai(cmb_posisi_pegawai.getSelectedItem().toString());
                 gs.setGender_pegawai(gender_group.getSelection().getActionCommand());
-                
+
                 dao.masukDataPegawai(gs);
                 tampil_pegawai();
             }
             txt_id_pegawai.setText("");
             txt_nama_pegawai.setText("");
             txt_alamat_pegawai.setText("");
-            txt_date_pegawai.setDateFormatString(""); date = "";
+            txt_date_pegawai.setDateFormatString("");
             cmb_posisi_pegawai.setSelectedItem(0);
             gender_group.clearSelection();
 
@@ -123,26 +294,26 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!");
         }
     }
-    
+
     void ubah_pegawai() {
-        SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String date = dFormat.format(txt_date_pegawai.getDate());
-        
         try {
             rdo_lk.setActionCommand("L");
             rdo_pr.setActionCommand("P");
 
-            if (txt_id_pegawai.getText().isEmpty() || 
-                txt_nama_pegawai.getText().isEmpty() || 
-                txt_alamat_pegawai.getText().isEmpty() || 
-                cmb_posisi_pegawai.getSelectedItem().toString().isEmpty() || 
-                gender_group.getSelection().getActionCommand().isEmpty() || 
-                txt_date_pegawai.getDateFormatString().isEmpty())
-            {
+            if (txt_id_pegawai.getText().isEmpty()
+                    || txt_nama_pegawai.getText().isEmpty()
+                    || txt_alamat_pegawai.getText().isEmpty()
+                    || cmb_posisi_pegawai.getSelectedItem().toString().isEmpty()
+                    || gender_group.getSelection().getActionCommand().isEmpty()
+                    || txt_date_pegawai.getDateFormatString().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
-                if      (txt_id_pegawai.getText().isEmpty())        {txt_id_pegawai.requestFocus();} 
-                else if (txt_nama_pegawai.getText().isEmpty())      {txt_nama_pegawai.requestFocus();} 
-                else if (txt_alamat_pegawai.getText().isEmpty())    {txt_alamat_pegawai.requestFocus();} 
+                if (txt_id_pegawai.getText().isEmpty()) {
+                    txt_id_pegawai.requestFocus();
+                } else if (txt_nama_pegawai.getText().isEmpty()) {
+                    txt_nama_pegawai.requestFocus();
+                } else if (txt_alamat_pegawai.getText().isEmpty()) {
+                    txt_alamat_pegawai.requestFocus();
+                }
             } else {
                 try {
                     Connection konek = new com.hotel.script.koneksi().getCon();
@@ -154,18 +325,18 @@ public class ADMIN extends javax.swing.JFrame {
                 admin_pegawai_getset gs = new admin_pegawai_getset();
                 gs.setId_pegawai(txt_id_pegawai.getText());
                 gs.setNama_pegawai(txt_nama_pegawai.getText());
-                gs.setTl_pegawai(date);
+                gs.setTl_pegawai(txt_date_pegawai.getDateFormatString());
                 gs.setAlamat_pegawai(txt_alamat_pegawai.getText());
                 gs.setPosisi_pegawai(cmb_posisi_pegawai.getSelectedItem().toString());
                 gs.setGender_pegawai(gender_group.getSelection().getActionCommand());
-                
+
                 dao.ubahDataPegawai(gs);
                 tampil_pegawai();
             }
             txt_id_pegawai.setText("");
             txt_nama_pegawai.setText("");
             txt_alamat_pegawai.setText("");
-            txt_date_pegawai.setDateFormatString(""); date = "";
+            txt_date_pegawai.setDateFormatString("");
             cmb_posisi_pegawai.setSelectedItem(0);
             gender_group.clearSelection();
 
@@ -176,10 +347,10 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!");
         }
     }
-    
-    public void klik_pegawai(){
+
+    public void klik_pegawai() {
         btn_save_pegawai.setVisible(false);
-        
+
         int row = tb_pegawai.getSelectedRow();
         txt_id_pegawai.setText(tb_pegawai.getModel().getValueAt(row, 0).toString());
         txt_id_pegawai.setEditable(false);
@@ -188,14 +359,14 @@ public class ADMIN extends javax.swing.JFrame {
         txt_alamat_pegawai.setText(tb_pegawai.getModel().getValueAt(row, 4).toString());
         cmb_posisi_pegawai.setSelectedItem(tb_pegawai.getModel().getValueAt(row, 5).toString());
     }
-    
+
     //DATA AKUN
-     void tampil_akun() {
+    void tampil_akun() {
         DefaultTableModel dt;
         Object[] baris = {"ID", "Username"};
         dt = new DefaultTableModel(null, baris);
         tb_akun.setModel(dt);
-        String sql = "SELECT b.user, b.password FROM tb_login b WHERE b.id_karyawan = (SELECT a.id_karyawan FROM tb_pegawai a)";        
+        String sql = "SELECT b.user, b.password FROM tb_login b WHERE b.id_karyawan = (SELECT a.id_karyawan FROM tb_pegawai a)";
 
         try {
             Connection konek = new com.hotel.script.koneksi().getCon();
@@ -215,22 +386,25 @@ public class ADMIN extends javax.swing.JFrame {
     void tulis_akun() {
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dFormat.format(txt_date_pegawai.getDate());
-        
+
         try {
             rdo_lk.setActionCommand("L");
             rdo_pr.setActionCommand("P");
 
-            if (txt_id_pegawai.getText().isEmpty() || 
-                txt_nama_pegawai.getText().isEmpty() || 
-                txt_alamat_pegawai.getText().isEmpty() || 
-                cmb_posisi_pegawai.getSelectedItem().toString().isEmpty() || 
-                gender_group.getSelection().getActionCommand().isEmpty() || 
-                txt_date_pegawai.getDateFormatString().isEmpty())
-            {
+            if (txt_id_pegawai.getText().isEmpty()
+                    || txt_nama_pegawai.getText().isEmpty()
+                    || txt_alamat_pegawai.getText().isEmpty()
+                    || cmb_posisi_pegawai.getSelectedItem().toString().isEmpty()
+                    || gender_group.getSelection().getActionCommand().isEmpty()
+                    || txt_date_pegawai.getDateFormatString().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
-                if      (txt_id_pegawai.getText().isEmpty())        {txt_id_pegawai.requestFocus();} 
-                else if (txt_nama_pegawai.getText().isEmpty())      {txt_nama_pegawai.requestFocus();} 
-                else if (txt_alamat_pegawai.getText().isEmpty())    {txt_alamat_pegawai.requestFocus();} 
+                if (txt_id_pegawai.getText().isEmpty()) {
+                    txt_id_pegawai.requestFocus();
+                } else if (txt_nama_pegawai.getText().isEmpty()) {
+                    txt_nama_pegawai.requestFocus();
+                } else if (txt_alamat_pegawai.getText().isEmpty()) {
+                    txt_alamat_pegawai.requestFocus();
+                }
             } else {
                 try {
                     Connection konek = new com.hotel.script.koneksi().getCon();
@@ -246,14 +420,15 @@ public class ADMIN extends javax.swing.JFrame {
                 gs.setAlamat_pegawai(txt_alamat_pegawai.getText());
                 gs.setPosisi_pegawai(cmb_posisi_pegawai.getSelectedItem().toString());
                 gs.setGender_pegawai(gender_group.getSelection().getActionCommand());
-                
+
                 dao.masukDataPegawai(gs);
                 tampil_pegawai();
             }
             txt_id_pegawai.setText("");
             txt_nama_pegawai.setText("");
             txt_alamat_pegawai.setText("");
-            txt_date_pegawai.setDateFormatString(""); date = "";
+            txt_date_pegawai.setDateFormatString("");
+            date = "";
             cmb_posisi_pegawai.setSelectedItem(0);
             gender_group.clearSelection();
 
@@ -262,26 +437,29 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!");
         }
     }
-    
+
     void ubah_akun() {
         SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dFormat.format(txt_date_pegawai.getDate());
-        
+
         try {
             rdo_lk.setActionCommand("L");
             rdo_pr.setActionCommand("P");
 
-            if (txt_id_pegawai.getText().isEmpty() || 
-                txt_nama_pegawai.getText().isEmpty() || 
-                txt_alamat_pegawai.getText().isEmpty() || 
-                cmb_posisi_pegawai.getSelectedItem().toString().isEmpty() || 
-                gender_group.getSelection().getActionCommand().isEmpty() || 
-                txt_date_pegawai.getDateFormatString().isEmpty())
-            {
+            if (txt_id_pegawai.getText().isEmpty()
+                    || txt_nama_pegawai.getText().isEmpty()
+                    || txt_alamat_pegawai.getText().isEmpty()
+                    || cmb_posisi_pegawai.getSelectedItem().toString().isEmpty()
+                    || gender_group.getSelection().getActionCommand().isEmpty()
+                    || txt_date_pegawai.getDateFormatString().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
-                if      (txt_id_pegawai.getText().isEmpty())        {txt_id_pegawai.requestFocus();} 
-                else if (txt_nama_pegawai.getText().isEmpty())      {txt_nama_pegawai.requestFocus();} 
-                else if (txt_alamat_pegawai.getText().isEmpty())    {txt_alamat_pegawai.requestFocus();} 
+                if (txt_id_pegawai.getText().isEmpty()) {
+                    txt_id_pegawai.requestFocus();
+                } else if (txt_nama_pegawai.getText().isEmpty()) {
+                    txt_nama_pegawai.requestFocus();
+                } else if (txt_alamat_pegawai.getText().isEmpty()) {
+                    txt_alamat_pegawai.requestFocus();
+                }
             } else {
                 try {
                     Connection konek = new com.hotel.script.koneksi().getCon();
@@ -297,14 +475,15 @@ public class ADMIN extends javax.swing.JFrame {
                 gs.setAlamat_pegawai(txt_alamat_pegawai.getText());
                 gs.setPosisi_pegawai(cmb_posisi_pegawai.getSelectedItem().toString());
                 gs.setGender_pegawai(gender_group.getSelection().getActionCommand());
-                
+
                 dao.ubahDataPegawai(gs);
                 tampil_pegawai();
             }
             txt_id_pegawai.setText("");
             txt_nama_pegawai.setText("");
             txt_alamat_pegawai.setText("");
-            txt_date_pegawai.setDateFormatString(""); date = "";
+            txt_date_pegawai.setDateFormatString("");
+            date = "";
             cmb_posisi_pegawai.setSelectedItem(0);
             gender_group.clearSelection();
 
@@ -315,10 +494,10 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!");
         }
     }
-    
-    public void klik_akun(){
+
+    public void klik_akun() {
         btn_save_pegawai.setVisible(false);
-        
+
         int row = tb_pegawai.getSelectedRow();
         txt_id_pegawai.setText(tb_pegawai.getModel().getValueAt(row, 0).toString());
         txt_id_pegawai.setEditable(false);
@@ -384,7 +563,7 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel61 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tb_akun = new javax.swing.JTable();
-        txt_id_kamar = new javax.swing.JTextField();
+        txt_id_akun = new javax.swing.JTextField();
         txt_username_akun = new javax.swing.JTextField();
         jLabel62 = new javax.swing.JLabel();
         jLabel63 = new javax.swing.JLabel();
@@ -397,10 +576,10 @@ public class ADMIN extends javax.swing.JFrame {
         btn_back_kamar = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tb_pegawai1 = new javax.swing.JTable();
+        tb_kamar = new javax.swing.JTable();
         txt_nomor_kamar = new javax.swing.JTextField();
         txt_lantai_kamar = new javax.swing.JTextField();
-        cmb_tipei_kamar = new javax.swing.JComboBox<>();
+        cmb_tipe_kamar = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -665,21 +844,21 @@ public class ADMIN extends javax.swing.JFrame {
                 .addComponent(panel_chart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(menuLayout.createSequentialGroup()
-                .addContainerGap(641, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_logout)
-                .addContainerGap(641, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
-                .addContainerGap(144, Short.MAX_VALUE)
+                .addContainerGap(143, Short.MAX_VALUE)
                 .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel_chart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_laporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(197, 197, 197)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
                 .addComponent(btn_logout)
                 .addGap(25, 25, 25))
         );
@@ -750,7 +929,7 @@ public class ADMIN extends javax.swing.JFrame {
 
         txt_date_pegawai.setBackground(new java.awt.Color(255, 255, 255));
         txt_date_pegawai.setForeground(new java.awt.Color(50, 55, 61));
-        txt_date_pegawai.setDateFormatString("dd-MMM-yyyy");
+        txt_date_pegawai.setDateFormatString("yyyy-MM-dd");
 
         cmb_posisi_pegawai.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cmb_posisi_pegawai.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manager", "Resepsionis", "Chef", "Cleaning Service", "Security", " " }));
@@ -805,6 +984,11 @@ public class ADMIN extends javax.swing.JFrame {
         btn_hapus_pegawai.setToolTipText("Hapus");
         btn_hapus_pegawai.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
         btn_hapus_pegawai.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_hapus_pegawai.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_hapus_pegawaiMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pegawaiLayout = new javax.swing.GroupLayout(pegawai);
         pegawai.setLayout(pegawaiLayout);
@@ -890,9 +1074,9 @@ public class ADMIN extends javax.swing.JFrame {
                             .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btn_back_pegawai)
-                .addGap(26, 26, 26))
+                .addGap(25, 25, 25))
         );
 
         pegawaiLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_posisi_pegawai, txt_alamat_pegawai, txt_date_pegawai});
@@ -932,9 +1116,9 @@ public class ADMIN extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tb_akun);
 
-        txt_id_kamar.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        txt_id_kamar.setForeground(new java.awt.Color(50, 55, 61));
-        txt_id_kamar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
+        txt_id_akun.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        txt_id_akun.setForeground(new java.awt.Color(50, 55, 61));
+        txt_id_akun.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
 
         txt_username_akun.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txt_username_akun.setForeground(new java.awt.Color(50, 55, 61));
@@ -976,7 +1160,7 @@ public class ADMIN extends javax.swing.JFrame {
             akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(akunLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -986,7 +1170,7 @@ public class ADMIN extends javax.swing.JFrame {
                         .addGap(58, 58, 58)
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txt_username_akun, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                            .addComponent(txt_id_kamar)
+                            .addComponent(txt_id_akun)
                             .addComponent(txt_password_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
                         .addComponent(btn_save_akun, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -996,7 +1180,7 @@ public class ADMIN extends javax.swing.JFrame {
                         .addComponent(btn_hapus_akun, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(50, 50, 50)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(akunLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_akun)
@@ -1015,7 +1199,7 @@ public class ADMIN extends javax.swing.JFrame {
                     .addGroup(akunLayout.createSequentialGroup()
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(jLabel62)
-                            .addComponent(txt_id_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_id_akun, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(8, 8, 8)
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(txt_username_akun, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1040,6 +1224,14 @@ public class ADMIN extends javax.swing.JFrame {
         main_panel.add(akun, "card3");
 
         kamar.setBackground(new java.awt.Color(255, 255, 255));
+        kamar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                kamarMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                kamarMouseEntered(evt);
+            }
+        });
 
         btn_back_kamar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_back.png"))); // NOI18N
         btn_back_kamar.setToolTipText("Menu");
@@ -1055,7 +1247,7 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel21.setText("Data Kamar");
 
-        tb_pegawai1.setModel(new javax.swing.table.DefaultTableModel(
+        tb_kamar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -1063,7 +1255,12 @@ public class ADMIN extends javax.swing.JFrame {
                 "Nomor Kamar", "Lantai", "Tipe", "Status"
             }
         ));
-        jScrollPane3.setViewportView(tb_pegawai1);
+        tb_kamar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tb_kamarMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tb_kamar);
 
         txt_nomor_kamar.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         txt_nomor_kamar.setForeground(new java.awt.Color(50, 55, 61));
@@ -1073,11 +1270,11 @@ public class ADMIN extends javax.swing.JFrame {
         txt_lantai_kamar.setForeground(new java.awt.Color(50, 55, 61));
         txt_lantai_kamar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
 
-        cmb_tipei_kamar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmb_tipei_kamar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Superior Room", "Deluxe Room", "Family Room" }));
-        cmb_tipei_kamar.addActionListener(new java.awt.event.ActionListener() {
+        cmb_tipe_kamar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        cmb_tipe_kamar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "     ", "Superior Room", "Deluxe Room", "Family Room" }));
+        cmb_tipe_kamar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmb_tipei_kamarActionPerformed(evt);
+                cmb_tipe_kamarActionPerformed(evt);
             }
         });
 
@@ -1098,21 +1295,36 @@ public class ADMIN extends javax.swing.JFrame {
         btn_save_kamar.setToolTipText("Simpan");
         btn_save_kamar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
         btn_save_kamar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_save_kamar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_save_kamarMouseClicked(evt);
+            }
+        });
 
         btn_edit_kamar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btn_edit_kamar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_update.png"))); // NOI18N
         btn_edit_kamar.setToolTipText("Edit");
         btn_edit_kamar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
         btn_edit_kamar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_edit_kamar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_edit_kamarMouseClicked(evt);
+            }
+        });
 
         btn_hapus_kamar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btn_hapus_kamar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_delete.png"))); // NOI18N
         btn_hapus_kamar.setToolTipText("Hapus");
         btn_hapus_kamar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(50, 55, 61)));
         btn_hapus_kamar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_hapus_kamar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_hapus_kamarMouseClicked(evt);
+            }
+        });
 
         cmb_status_kamar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cmb_status_kamar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Kosong", "Terisi" }));
+        cmb_status_kamar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "     ", "Kosong", "Terisi" }));
         cmb_status_kamar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmb_status_kamarActionPerformed(evt);
@@ -1135,7 +1347,7 @@ public class ADMIN extends javax.swing.JFrame {
                             .addComponent(jLabel25))
                         .addGap(45, 45, 45)
                         .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_tipei_kamar, 0, 492, Short.MAX_VALUE)
+                            .addComponent(cmb_tipe_kamar, 0, 492, Short.MAX_VALUE)
                             .addComponent(txt_lantai_kamar)
                             .addComponent(txt_nomor_kamar)
                             .addComponent(cmb_status_kamar, 0, 492, Short.MAX_VALUE)))
@@ -1173,7 +1385,7 @@ public class ADMIN extends javax.swing.JFrame {
                             .addComponent(txt_lantai_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(8, 8, 8)
                         .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(cmb_tipei_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmb_tipe_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel24))
                         .addGap(8, 8, 8)
                         .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -1192,7 +1404,7 @@ public class ADMIN extends javax.swing.JFrame {
 
         kamarLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel22, jLabel23, jLabel24, jLabel25, txt_nomor_kamar});
 
-        kamarLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_status_kamar, cmb_tipei_kamar, txt_lantai_kamar});
+        kamarLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_status_kamar, cmb_tipe_kamar, txt_lantai_kamar});
 
         main_panel.add(kamar, "card3");
 
@@ -1360,7 +1572,7 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void panel_pegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_pegawaiMouseClicked
         menu.setVisible(false);
-        pegawai.setVisible(true);        
+        pegawai.setVisible(true);
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(false);
@@ -1377,7 +1589,7 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void panel_akunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_akunMouseClicked
         menu.setVisible(false);
-        pegawai.setVisible(false);        
+        pegawai.setVisible(false);
         akun.setVisible(true);
         kamar.setVisible(false);
         laporan.setVisible(false);
@@ -1388,9 +1600,9 @@ public class ADMIN extends javax.swing.JFrame {
         toMenu();
     }//GEN-LAST:event_btn_back_kamarMouseClicked
 
-    private void cmb_tipei_kamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_tipei_kamarActionPerformed
+    private void cmb_tipe_kamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_tipe_kamarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmb_tipei_kamarActionPerformed
+    }//GEN-LAST:event_cmb_tipe_kamarActionPerformed
 
     private void cmb_status_kamarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_status_kamarActionPerformed
         // TODO add your handling code here:
@@ -1406,7 +1618,7 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void panel_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_kamarMouseClicked
         menu.setVisible(false);
-        pegawai.setVisible(false);        
+        pegawai.setVisible(false);
         akun.setVisible(false);
         kamar.setVisible(true);
         laporan.setVisible(false);
@@ -1415,7 +1627,7 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void panel_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_laporanMouseClicked
         menu.setVisible(false);
-        pegawai.setVisible(false);        
+        pegawai.setVisible(false);
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(true);
@@ -1424,7 +1636,7 @@ public class ADMIN extends javax.swing.JFrame {
 
     private void panel_chartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_chartMouseClicked
         menu.setVisible(false);
-        pegawai.setVisible(false);        
+        pegawai.setVisible(false);
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(false);
@@ -1456,6 +1668,69 @@ public class ADMIN extends javax.swing.JFrame {
     private void akunMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_akunMouseEntered
         tampil_akun();
     }//GEN-LAST:event_akunMouseEntered
+
+    private void kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_kamarMouseClicked
+
+    }//GEN-LAST:event_kamarMouseClicked
+
+    private void btn_save_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_save_kamarMouseClicked
+        tulis_kamar();
+    }//GEN-LAST:event_btn_save_kamarMouseClicked
+
+    private void kamarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_kamarMouseEntered
+        tampil_kamar();
+    }//GEN-LAST:event_kamarMouseEntered
+
+    private void btn_edit_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_edit_kamarMouseClicked
+    ubah_kamar();
+    }//GEN-LAST:event_btn_edit_kamarMouseClicked
+
+    private void tb_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_kamarMouseClicked
+    klik_kamar();
+    }//GEN-LAST:event_tb_kamarMouseClicked
+
+    private void btn_hapus_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_hapus_kamarMouseClicked
+        try {
+            admin_kamar_dao dao = new admin_kamar_dao();
+            admin_kamar_getset gs = new admin_kamar_getset();
+            
+            gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
+            dao.hapusDataKamar(gs); 
+            
+            tampil_kamar();
+            
+            txt_nomor_kamar.setEditable(true);
+            txt_nomor_kamar.setText("");
+            txt_lantai_kamar.setText("");
+            cmb_tipe_kamar.setSelectedIndex(0);
+            cmb_status_kamar.setSelectedIndex(0);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Gagal Terhapus! " + e);
+        }
+    }//GEN-LAST:event_btn_hapus_kamarMouseClicked
+
+    private void btn_hapus_pegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_hapus_pegawaiMouseClicked
+        try {
+            admin_pegawai_dao dao = new admin_pegawai_dao();
+            admin_pegawai_getset gs = new admin_pegawai_getset();
+            
+            gs.setId_pegawai(txt_id_pegawai.getText());
+            dao.hapusDataPegawai(gs); 
+            
+            tampil_pegawai();
+            
+            txt_id_pegawai.setEditable(true);
+            txt_id_pegawai.setText("");
+            txt_nama_pegawai.setText("");
+            txt_date_pegawai.setDateFormatString("");
+            txt_alamat_pegawai.setText("");
+            cmb_posisi_pegawai.setSelectedItem(0);
+            gender_group.clearSelection();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data Gagal Terhapus! " + e);
+        }
+
+    }//GEN-LAST:event_btn_hapus_pegawaiMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1511,7 +1786,7 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel btn_save_pegawai;
     private javax.swing.JComboBox<String> cmb_posisi_pegawai;
     private javax.swing.JComboBox<String> cmb_status_kamar;
-    private javax.swing.JComboBox<String> cmb_tipei_kamar;
+    private javax.swing.JComboBox<String> cmb_tipe_kamar;
     private javax.swing.JPanel diagram;
     private javax.swing.JPanel full_body;
     private javax.swing.ButtonGroup gender_group;
@@ -1560,11 +1835,11 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JRadioButton rdo_lk;
     private javax.swing.JRadioButton rdo_pr;
     private javax.swing.JTable tb_akun;
+    private javax.swing.JTable tb_kamar;
     private javax.swing.JTable tb_pegawai;
-    private javax.swing.JTable tb_pegawai1;
     private javax.swing.JTextField txt_alamat_pegawai;
     private com.toedter.calendar.JDateChooser txt_date_pegawai;
-    private javax.swing.JTextField txt_id_kamar;
+    private javax.swing.JTextField txt_id_akun;
     private javax.swing.JTextField txt_id_pegawai;
     private javax.swing.JTextField txt_lantai_kamar;
     private javax.swing.JTextField txt_nama_pegawai;
