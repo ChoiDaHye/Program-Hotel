@@ -29,11 +29,12 @@ public class admin_kamar_dao {
     
     public boolean masukDataKamar(admin_kamar_getset gs) {
         try {
-            ps = con.prepareStatement("INSERT INTO tb_kamar(id_kamar, lantai, id_tipe, status) values (?, ?, ?, ?)");
+            ps = con.prepareStatement("INSERT INTO tb_kamar(id_kamar, lantai, id_tipe, status, jumlah) values (?, ?, ?, ?, ?)");
             ps.setInt(1, gs.getNomorkamar());
             ps.setInt(2, gs.getLantai());
             ps.setInt(3, gs.getTipe());
             ps.setInt(4, gs.getStatus());
+            ps.setInt(5, 1);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Kamar Ditambahkan!");
             return true;
