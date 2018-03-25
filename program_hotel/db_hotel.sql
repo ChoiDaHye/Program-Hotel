@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2018 at 07:48 PM
+-- Generation Time: Mar 25, 2018 at 03:33 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 7.0.13
 
@@ -30,20 +30,21 @@ CREATE TABLE `tb_kamar` (
   `id_kamar` int(3) NOT NULL,
   `lantai` int(3) NOT NULL,
   `id_tipe` int(1) NOT NULL,
-  `status` int(1) NOT NULL
+  `status` int(1) NOT NULL,
+  `jumlah` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tb_kamar`
 --
 
-INSERT INTO `tb_kamar` (`id_kamar`, `lantai`, `id_tipe`, `status`) VALUES
-(1, 1, 1, 0),
-(2, 1, 1, 0),
-(3, 1, 2, 0),
-(4, 1, 2, 0),
-(5, 1, 3, 0),
-(6, 1, 3, 0);
+INSERT INTO `tb_kamar` (`id_kamar`, `lantai`, `id_tipe`, `status`, `jumlah`) VALUES
+(1, 1, 1, 1, 1),
+(2, 1, 1, 1, 1),
+(3, 1, 2, 1, 1),
+(4, 1, 2, 1, 1),
+(5, 1, 3, 1, 1),
+(6, 1, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -73,18 +74,19 @@ INSERT INTO `tb_kamar_tipe` (`id_tipe`, `nama_tipe`, `harga`) VALUES
 --
 
 CREATE TABLE `tb_login` (
+  `id` varchar(100) NOT NULL,
   `user` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `id_karyawan` varchar(6) NOT NULL
+  `pass` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tb_login`
 --
 
-INSERT INTO `tb_login` (`user`, `password`, `id_karyawan`) VALUES
-('admin', 'admin', 'YF0001'),
-('resep', 'resep', 'YF0002');
+INSERT INTO `tb_login` (`id`, `user`, `pass`) VALUES
+('YF0001', 'admin', 'admin'),
+('YF0002', 'YF0002', ''),
+('YF0003', 'YF0003', 'resep');
 
 -- --------------------------------------------------------
 
@@ -96,7 +98,6 @@ CREATE TABLE `tb_pegawai` (
   `id_karyawan` varchar(6) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `gender` varchar(1) NOT NULL,
-  `tl` date NOT NULL,
   `alamat` varchar(50) NOT NULL,
   `level` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -105,10 +106,10 @@ CREATE TABLE `tb_pegawai` (
 -- Dumping data for table `tb_pegawai`
 --
 
-INSERT INTO `tb_pegawai` (`id_karyawan`, `nama`, `gender`, `tl`, `alamat`, `level`) VALUES
-('YF0001', 'Yosef Febrianes', 'L', '1999-02-14', 'Jln. Diponegoro', 'Administrator'),
-('YF0002', 'Kalvin', 'L', '1999-03-22', 'Bumi', 'Resepsionis'),
-('YF0003', 'Gedalya Anugrah', 'L', '1970-01-01', 'Cungkup', 'Resepsionis');
+INSERT INTO `tb_pegawai` (`id_karyawan`, `nama`, `gender`, `alamat`, `level`) VALUES
+('YF0001', 'Yosef Febrianes', 'L', 'Jln. Diponegoro', 'Administrator'),
+('YF0002', 'Choaz', 'L', 'Bumi', 'Manager'),
+('YF0003', 'Gedalya Anugrah', 'L', 'Cungkup', 'Resepsionis');
 
 -- --------------------------------------------------------
 
@@ -160,8 +161,7 @@ CREATE TABLE `tb_tamu` (
   `nama` varchar(50) NOT NULL,
   `alamat` varchar(50) NOT NULL,
   `telepon` varchar(15) NOT NULL,
-  `gender` varchar(1) NOT NULL,
-  `usia` int(3) NOT NULL
+  `gender` varchar(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -185,8 +185,7 @@ ALTER TABLE `tb_kamar_tipe`
 -- Indexes for table `tb_login`
 --
 ALTER TABLE `tb_login`
-  ADD PRIMARY KEY (`user`),
-  ADD KEY `id_karyawan` (`id_karyawan`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tb_pegawai`
