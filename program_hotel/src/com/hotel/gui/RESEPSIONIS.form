@@ -115,9 +115,9 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="btn_logout" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -130,7 +130,7 @@
                               <Component id="panel_pesan" min="-2" max="-2" attributes="0"/>
                               <Component id="panel_info" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
+                          <EmptySpace pref="182" max="32767" attributes="0"/>
                           <Component id="btn_logout" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
@@ -347,6 +347,9 @@
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="infoMouseEntered"/>
+              </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
                   <CardConstraints cardName="card3"/>
@@ -365,9 +368,9 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="btn_back_info" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -445,23 +448,23 @@
                                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="jLabel12" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="txt_nama" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="txt_nik" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="txt_alamat" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_tr_sr" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="txt_tot_sr" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_sp_sr" alignment="1" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="txt_nik1" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="txt_nama1" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="txt_alamat1" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_tot_dr" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_tr_dr" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="txt_sp_dr" alignment="1" max="32767" attributes="0"/>
                                           <Component id="jLabel18" alignment="0" pref="100" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="jLabel19" alignment="0" pref="100" max="32767" attributes="0"/>
-                                          <Component id="txt_nik2" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="txt_nama2" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="txt_alamat2" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_tot_fr" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="txt_tr_fr" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="txt_sp_fr" alignment="1" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="0" pref="18" max="32767" attributes="0"/>
                                   </Group>
@@ -482,36 +485,36 @@
                                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_nik" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                                          <Component id="txt_tot_sr" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_nama" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                                          <Component id="txt_tr_sr" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="2" attributes="0">
                                           <Component id="jLabel10" alignment="2" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_alamat" alignment="2" min="-2" pref="30" max="-2" attributes="0"/>
+                                          <Component id="txt_sp_sr" alignment="2" min="-2" pref="30" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel18" min="-2" pref="24" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                      <Component id="txt_nik1" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_tot_dr" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="txt_nama1" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_tr_dr" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="txt_alamat1" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_sp_dr" min="-2" pref="30" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabel19" min="-2" pref="24" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                      <Component id="txt_nik2" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_tot_fr" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="txt_nama2" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_tr_fr" min="-2" pref="30" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="txt_alamat2" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <Component id="txt_sp_fr" min="-2" pref="30" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
@@ -537,7 +540,7 @@
                         <Property name="text" type="java.lang.String" value="Total"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nik">
+                    <Component class="javax.swing.JTextField" name="txt_tot_sr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -547,7 +550,6 @@
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                             <LineBorder>
@@ -565,7 +567,7 @@
                         <Property name="text" type="java.lang.String" value="Terisi"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nama">
+                    <Component class="javax.swing.JTextField" name="txt_tr_sr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -605,7 +607,7 @@
                         <Property name="text" type="java.lang.String" value="Superior Room"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_alamat">
+                    <Component class="javax.swing.JTextField" name="txt_sp_sr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -637,7 +639,7 @@
                         <Property name="text" type="java.lang.String" value="Deluxe Room"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nik1">
+                    <Component class="javax.swing.JTextField" name="txt_tot_dr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -647,7 +649,6 @@
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                             <LineBorder>
@@ -657,7 +658,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nama1">
+                    <Component class="javax.swing.JTextField" name="txt_tr_dr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -680,7 +681,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_alamat1">
+                    <Component class="javax.swing.JTextField" name="txt_sp_dr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -712,7 +713,7 @@
                         <Property name="text" type="java.lang.String" value="Family Room"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nik2">
+                    <Component class="javax.swing.JTextField" name="txt_tot_fr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -722,7 +723,6 @@
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
                         <Property name="horizontalAlignment" type="int" value="0"/>
-                        <Property name="text" type="java.lang.String" value="0"/>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                             <LineBorder>
@@ -732,7 +732,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_nama2">
+                    <Component class="javax.swing.JTextField" name="txt_tr_fr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -755,7 +755,7 @@
                         </Property>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_alamat2">
+                    <Component class="javax.swing.JTextField" name="txt_sp_fr">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -996,15 +996,15 @@
                       <Component id="jLabel61" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
-                          <Component id="data_pemesan" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                          <Component id="pilih_kamar1" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="data_pemesan" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                                  <Component id="pilih_kamar1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btn_back_pesan" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
-                          <Component id="btn_back_pesan" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="511" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1631,16 +1631,14 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
                               <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="btn_back_bayar" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="0" pref="189" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jPanel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btn_back_bayar" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="189" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>

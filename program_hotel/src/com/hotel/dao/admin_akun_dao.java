@@ -21,10 +21,10 @@ public class admin_akun_dao {
 
     public boolean masukDataAkun(admin_akun_getset gs) {
         try {
-            ps = con.prepareStatement("INSERT INTO tb_login(user, password, id_karyawan) values (?, ?, ?)");
-            ps.setString(1, gs.getUser());
-            ps.setString(2, gs.getPass());
-            ps.setString(3, gs.getId());
+            ps = con.prepareStatement("INSERT INTO tb_login(id, user, pass) values (?, ?, ?)");
+            ps.setString(1, gs.getId());
+            ps.setString(2, gs.getUser());
+            ps.setString(3, gs.getPass());            
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Akun Ditambahkan!");
             return true;
@@ -40,7 +40,7 @@ public class admin_akun_dao {
             String USER = gs.getUser();
             String PASS = gs.getPass();
 
-            ps = con.prepareStatement("UPDATE tb_login SET user = '"+ USER +"', password = '"+ PASS +"' WHERE id_karyawan = '" + ID + "'");
+            ps = con.prepareStatement("UPDATE tb_login SET pass = '"+ PASS +"' WHERE id = '" + ID + "' AND user = '"+ USER +"'");
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Akun Diubah!");
             return true;
@@ -53,7 +53,7 @@ public class admin_akun_dao {
     public boolean hapusDataAkun(admin_akun_getset gs) {
         try {
             String ID = gs.getId();
-            ps = con.prepareStatement("DELETE FROM tb_login WHERE id_karyawan = '" + ID + "'");
+            ps = con.prepareStatement("DELETE FROM tb_login WHERE id = '" + ID + "'");
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Akun Dihapus!");
             return true;

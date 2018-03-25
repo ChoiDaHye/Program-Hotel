@@ -169,7 +169,7 @@ public class LOGIN extends javax.swing.JFrame {
         try {
             String user = txt_user.getText();
             String pass = txt_pass.getText();
-            String sql = "SELECT level FROM tb_pegawai WHERE id_karyawan IN (SELECT id_karyawan FROM tb_login WHERE user = '"+user+"' AND password = '"+pass+"')";
+            String sql = "SELECT level FROM tb_pegawai WHERE id_karyawan IN (SELECT id FROM tb_login WHERE user = '"+user+"' AND pass = '"+pass+"')";
             
             conn = new com.hotel.script.koneksi().getCon();
             st = conn.createStatement();
@@ -184,6 +184,8 @@ public class LOGIN extends javax.swing.JFrame {
                     ADMIN admin = new ADMIN();
                     admin.setVisible(true);
                     this.dispose();  
+                } else{
+                    JOptionPane.showMessageDialog(this,"Akses ditolak!");
                 }
             } else{
                 JOptionPane.showMessageDialog(this,"Anda tidak memiliki hak akses!");

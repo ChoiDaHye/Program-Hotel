@@ -21,13 +21,12 @@ public class admin_pegawai_dao {
 
     public boolean masukDataPegawai(admin_pegawai_getset gs) {
         try {
-            ps = con.prepareStatement("INSERT INTO tb_pegawai(id_karyawan, nama, gender, tl, alamat, level) values (?, ?, ?, ?, ?, ?)");
+            ps = con.prepareStatement("INSERT INTO tb_pegawai(id_karyawan, nama, gender, alamat, level) values (?, ?, ?, ?, ?)");
             ps.setString(1, gs.getId_pegawai());
             ps.setString(2, gs.getNama_pegawai());
             ps.setString(3, gs.getGender_pegawai());
-            ps.setString(4, gs.getTl_pegawai());
-            ps.setString(5, gs.getAlamat_pegawai());
-            ps.setString(6, gs.getPosisi_pegawai());
+            ps.setString(4, gs.getAlamat_pegawai());
+            ps.setString(5, gs.getPosisi_pegawai());
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Pegawai Ditambahkan!");
             return true;
@@ -42,11 +41,10 @@ public class admin_pegawai_dao {
             String ID = gs.getId_pegawai();
             String NAMA = gs.getNama_pegawai();
             String GENDER = gs.getGender_pegawai();
-            String TL = gs.getTl_pegawai();
             String ALAMAT = gs.getAlamat_pegawai();
             String LEVEL = gs.getPosisi_pegawai();
 
-            ps = con.prepareStatement("UPDATE tb_pegawai SET nama = '" + NAMA + "', gender = '" + GENDER + "', tl = '" + TL + "', alamat = '" + ALAMAT + "', level = '" + LEVEL + "' WHERE id_karyawan = '" + ID + "'");
+            ps = con.prepareStatement("UPDATE tb_pegawai SET nama = '" + NAMA + "', gender = '" + GENDER + "', alamat = '" + ALAMAT + "', level = '" + LEVEL + "' WHERE id_karyawan = '" + ID + "'");
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data Pegawai Diubah!");
             return true;

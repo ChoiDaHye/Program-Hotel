@@ -4,7 +4,6 @@ public class admin_pegawai_getset {
     private String id_pegawai;
     private String nama_pegawai;
     private String gender_pegawai;
-    private String tl_pegawai;
     private String alamat_pegawai;
     private String posisi_pegawai;
 
@@ -30,14 +29,6 @@ public class admin_pegawai_getset {
 
     public void setGender_pegawai(String gender_pegawai) {
         this.gender_pegawai = gender_pegawai;
-    }
-
-    public String getTl_pegawai() {
-        return tl_pegawai;
-    }
-
-    public void setTl_pegawai(String tl_pegawai) {
-        this.tl_pegawai = tl_pegawai;
     }
 
     public String getAlamat_pegawai() {

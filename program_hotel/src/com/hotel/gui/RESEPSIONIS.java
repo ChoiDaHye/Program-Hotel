@@ -7,6 +7,7 @@ package com.hotel.gui;
 
 import java.awt.Color;
 import javax.swing.JPanel;
+import java.sql.*;
 
 /**
  *
@@ -35,6 +36,34 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         info.setVisible(false);
         pesan.setVisible(false);
         bayar.setVisible(false);
+    }
+
+    void info() {
+        String sql1 = "SELECT SUM(a1) FROM tb_kamar WHERE id_tipe = '1'";
+        String sql2 = "SELECT SUM(b1) FROM tb_kamar WHERE id_tipe = '2'";
+        String sql3 = "SELECT SUM(c1) FROM tb_kamar WHERE id_tipe = '3'";
+        int a1 = 0;
+        int b1 = 0;
+        int c1 = 0;
+        try {
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st = konek.createStatement();
+            ResultSet rs1 = st.executeQuery(sql1);
+            ResultSet rs2 = st.executeQuery(sql2);
+            ResultSet rs3 = st.executeQuery(sql3);
+            while (rs1.next() || rs2.next() || rs3.next()) {
+                int a11 = rs1.getInt(1);
+                a1 += a11;
+                int b11 = rs2.getInt(1);
+                b1 += b11;
+                int c11 = rs3.getInt(1);
+                c1 += c11;
+            }
+            txt_tot_sr.setText(Integer.toString(a1));
+            txt_tot_dr.setText(Integer.toString(b1));
+            txt_tot_fr.setText(Integer.toString(c1));
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -67,20 +96,20 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         data_kamar = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        txt_nik = new javax.swing.JTextField();
+        txt_tot_sr = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        txt_nama = new javax.swing.JTextField();
+        txt_tr_sr = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        txt_alamat = new javax.swing.JTextField();
+        txt_sp_sr = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        txt_nik1 = new javax.swing.JTextField();
-        txt_nama1 = new javax.swing.JTextField();
-        txt_alamat1 = new javax.swing.JTextField();
+        txt_tot_dr = new javax.swing.JTextField();
+        txt_tr_dr = new javax.swing.JTextField();
+        txt_sp_dr = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        txt_nik2 = new javax.swing.JTextField();
-        txt_nama2 = new javax.swing.JTextField();
-        txt_alamat2 = new javax.swing.JTextField();
+        txt_tot_fr = new javax.swing.JTextField();
+        txt_tr_fr = new javax.swing.JTextField();
+        txt_sp_fr = new javax.swing.JTextField();
         pilih_kamar = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -306,9 +335,9 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                 .addComponent(panel_bayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(menuLayout.createSequentialGroup()
-                .addContainerGap(511, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_logout)
-                .addContainerGap(511, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -318,7 +347,7 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                     .addComponent(panel_bayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_pesan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_info, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(182, 182, 182)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
                 .addComponent(btn_logout)
                 .addGap(25, 25, 25))
         );
@@ -326,6 +355,11 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         main_panel.add(menu, "card3");
 
         info.setBackground(new java.awt.Color(255, 255, 255));
+        info.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                infoMouseEntered(evt);
+            }
+        });
 
         btn_back_info.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_back.png"))); // NOI18N
         btn_back_info.setToolTipText("Menu");
@@ -351,23 +385,22 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Total");
 
-        txt_nik.setEditable(false);
-        txt_nik.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nik.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nik.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nik.setText("0");
-        txt_nik.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tot_sr.setEditable(false);
+        txt_tot_sr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tot_sr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tot_sr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tot_sr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Terisi");
 
-        txt_nama.setEditable(false);
-        txt_nama.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nama.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nama.setForeground(new java.awt.Color(255, 0, 0));
-        txt_nama.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nama.setText("0");
-        txt_nama.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tr_sr.setEditable(false);
+        txt_tr_sr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tr_sr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tr_sr.setForeground(new java.awt.Color(255, 0, 0));
+        txt_tr_sr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tr_sr.setText("0");
+        txt_tr_sr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Siap Pesan");
@@ -376,67 +409,65 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Superior Room");
 
-        txt_alamat.setEditable(false);
-        txt_alamat.setBackground(new java.awt.Color(255, 255, 255));
-        txt_alamat.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_alamat.setForeground(new java.awt.Color(0, 255, 0));
-        txt_alamat.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_alamat.setText("0");
-        txt_alamat.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_sp_sr.setEditable(false);
+        txt_sp_sr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_sp_sr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_sp_sr.setForeground(new java.awt.Color(0, 255, 0));
+        txt_sp_sr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_sp_sr.setText("0");
+        txt_sp_sr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setText("Deluxe Room");
 
-        txt_nik1.setEditable(false);
-        txt_nik1.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nik1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nik1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nik1.setText("0");
-        txt_nik1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tot_dr.setEditable(false);
+        txt_tot_dr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tot_dr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tot_dr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tot_dr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
-        txt_nama1.setEditable(false);
-        txt_nama1.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nama1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nama1.setForeground(new java.awt.Color(255, 0, 0));
-        txt_nama1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nama1.setText("0");
-        txt_nama1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tr_dr.setEditable(false);
+        txt_tr_dr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tr_dr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tr_dr.setForeground(new java.awt.Color(255, 0, 0));
+        txt_tr_dr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tr_dr.setText("0");
+        txt_tr_dr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
-        txt_alamat1.setEditable(false);
-        txt_alamat1.setBackground(new java.awt.Color(255, 255, 255));
-        txt_alamat1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_alamat1.setForeground(new java.awt.Color(0, 255, 0));
-        txt_alamat1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_alamat1.setText("0");
-        txt_alamat1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_sp_dr.setEditable(false);
+        txt_sp_dr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_sp_dr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_sp_dr.setForeground(new java.awt.Color(0, 255, 0));
+        txt_sp_dr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_sp_dr.setText("0");
+        txt_sp_dr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Family Room");
 
-        txt_nik2.setEditable(false);
-        txt_nik2.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nik2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nik2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nik2.setText("0");
-        txt_nik2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tot_fr.setEditable(false);
+        txt_tot_fr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tot_fr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tot_fr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tot_fr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
-        txt_nama2.setEditable(false);
-        txt_nama2.setBackground(new java.awt.Color(255, 255, 255));
-        txt_nama2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_nama2.setForeground(new java.awt.Color(255, 0, 0));
-        txt_nama2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_nama2.setText("0");
-        txt_nama2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_tr_fr.setEditable(false);
+        txt_tr_fr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_tr_fr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_tr_fr.setForeground(new java.awt.Color(255, 0, 0));
+        txt_tr_fr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_tr_fr.setText("0");
+        txt_tr_fr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
-        txt_alamat2.setEditable(false);
-        txt_alamat2.setBackground(new java.awt.Color(255, 255, 255));
-        txt_alamat2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txt_alamat2.setForeground(new java.awt.Color(0, 255, 0));
-        txt_alamat2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_alamat2.setText("0");
-        txt_alamat2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        txt_sp_fr.setEditable(false);
+        txt_sp_fr.setBackground(new java.awt.Color(255, 255, 255));
+        txt_sp_fr.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txt_sp_fr.setForeground(new java.awt.Color(0, 255, 0));
+        txt_sp_fr.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txt_sp_fr.setText("0");
+        txt_sp_fr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
 
         javax.swing.GroupLayout data_kamarLayout = new javax.swing.GroupLayout(data_kamar);
         data_kamar.setLayout(data_kamarLayout);
@@ -454,21 +485,21 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                         .addGap(46, 46, 46)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txt_nama)
-                            .addComponent(txt_nik, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_alamat, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(txt_tr_sr)
+                            .addComponent(txt_tot_sr, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_sp_sr, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_nik1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_nama1)
-                            .addComponent(txt_alamat1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_tot_dr, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_tr_dr)
+                            .addComponent(txt_sp_dr, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                            .addComponent(txt_nik2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_nama2)
-                            .addComponent(txt_alamat2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(txt_tot_fr, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_tr_fr)
+                            .addComponent(txt_sp_fr, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(0, 18, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -484,31 +515,31 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                         .addGap(4, 4, 4)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(txt_nik, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_tot_sr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
-                            .addComponent(txt_nama, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_tr_sr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(data_kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(jLabel10)
-                            .addComponent(txt_alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_sp_sr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(data_kamarLayout.createSequentialGroup()
                         .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
-                        .addComponent(txt_nik1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_tot_dr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_nama1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_tr_dr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_alamat1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_sp_dr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(data_kamarLayout.createSequentialGroup()
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
-                        .addComponent(txt_nik2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_tot_fr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_nama2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_tr_fr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_alamat2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txt_sp_fr, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -618,9 +649,9 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                 .addComponent(pilih_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(infoLayout.createSequentialGroup()
-                .addContainerGap(511, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_info)
-                .addContainerGap(511, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         infoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {data_kamar, pilih_kamar});
@@ -942,14 +973,13 @@ public class RESEPSIONIS extends javax.swing.JFrame {
             .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pesanLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(data_pemesan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(pilih_kamar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pesanLayout.createSequentialGroup()
+                        .addComponent(data_pemesan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(pilih_kamar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_back_pesan))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pesanLayout.createSequentialGroup()
-                .addContainerGap(511, Short.MAX_VALUE)
-                .addComponent(btn_back_pesan)
-                .addContainerGap(511, Short.MAX_VALUE))
         );
         pesanLayout.setVerticalGroup(
             pesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1093,15 +1123,13 @@ public class RESEPSIONIS extends javax.swing.JFrame {
             .addGroup(bayarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(bayarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(bayarLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(bayarLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_back_bayar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 189, Short.MAX_VALUE)
+                        .addGroup(bayarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_back_bayar))
+                        .addGap(0, 189, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         bayarLayout.setVerticalGroup(
@@ -1179,6 +1207,8 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         info.setVisible(true);
         pesan.setVisible(false);
         bayar.setVisible(false);
+
+        info();
     }//GEN-LAST:event_panel_infoMouseClicked
 
     private void btn_back_infoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_infoMouseClicked
@@ -1216,6 +1246,25 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         login.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_logoutMouseClicked
+
+    private void infoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_infoMouseEntered
+        String sql1 = "SELECT SUM(id_tipe = '1') FROM tb_kamar";
+        String sql2 = "SELECT SUM(id_tipe = '2') FROM tb_kamar";
+        String sql3 = "SELECT SUM(id_tipe = '3') FROM tb_kamar";
+        try {
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st = konek.createStatement();
+            ResultSet rs1 = st.executeQuery(sql1);
+            ResultSet rs2 = st.executeQuery(sql2);
+            ResultSet rs3 = st.executeQuery(sql3);
+            while (rs1.next() || rs2.next() || rs3.next()) {
+                txt_tot_sr.setText(Integer.toString(rs1.getInt(1)));
+                txt_tot_dr.setText(Integer.toString(rs2.getInt(1)));
+                txt_tot_fr.setText(Integer.toString(rs3.getInt(1)));
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_infoMouseEntered
 
     /**
      * @param args the command line arguments
@@ -1332,23 +1381,23 @@ public class RESEPSIONIS extends javax.swing.JFrame {
     private javax.swing.JPanel pilih_kamar1;
     private javax.swing.JRadioButton rdo_lk;
     private javax.swing.JRadioButton rdo_pr;
-    private javax.swing.JTextField txt_alamat;
-    private javax.swing.JTextField txt_alamat1;
-    private javax.swing.JTextField txt_alamat2;
     private javax.swing.JTextField txt_alamat3;
     private javax.swing.JTextField txt_alamat4;
     private javax.swing.JTextField txt_alamat5;
     private javax.swing.JTextField txt_alamat6;
     private javax.swing.JTextField txt_alamat7;
-    private javax.swing.JTextField txt_nama;
-    private javax.swing.JTextField txt_nama1;
-    private javax.swing.JTextField txt_nama2;
     private javax.swing.JTextField txt_nama3;
-    private javax.swing.JTextField txt_nik;
-    private javax.swing.JTextField txt_nik1;
-    private javax.swing.JTextField txt_nik2;
     private javax.swing.JTextField txt_nik3;
     private javax.swing.JTextField txt_nik4;
     private javax.swing.JTextField txt_nik5;
+    private javax.swing.JTextField txt_sp_dr;
+    private javax.swing.JTextField txt_sp_fr;
+    private javax.swing.JTextField txt_sp_sr;
+    private javax.swing.JTextField txt_tot_dr;
+    private javax.swing.JTextField txt_tot_fr;
+    private javax.swing.JTextField txt_tot_sr;
+    private javax.swing.JTextField txt_tr_dr;
+    private javax.swing.JTextField txt_tr_fr;
+    private javax.swing.JTextField txt_tr_sr;
     // End of variables declaration//GEN-END:variables
 }
