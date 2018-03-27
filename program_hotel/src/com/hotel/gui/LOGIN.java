@@ -8,6 +8,7 @@ package com.hotel.gui;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -160,44 +161,43 @@ public class LOGIN extends javax.swing.JFrame {
     private void btn_loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_loginMouseClicked
         login();
     }//GEN-LAST:event_btn_loginMouseClicked
-    
-    public void login(){
+
+    public void login() {
         Connection conn;
         Statement st;
         ResultSet rs;
-        
+
         try {
             String user = txt_user.getText();
             String pass = txt_pass.getText();
-            String sql = "SELECT level FROM tb_pegawai WHERE id_karyawan IN (SELECT id FROM tb_login WHERE user = '"+user+"' AND pass = '"+pass+"')";
-            
+            String sql = "SELECT level FROM tb_pegawai WHERE id_karyawan IN (SELECT id FROM tb_login WHERE user = '" + user + "' AND pass = '" + pass + "')";
+
             conn = new com.hotel.script.koneksi().getCon();
             st = conn.createStatement();
             rs = st.executeQuery(sql);
-            
+
             RESEPSIONIS resep = new RESEPSIONIS();
             ADMIN admin = new ADMIN();
-            
-            if(rs.next()){
-                if(rs.getString("level").equals("Resepsionis")){         
-                    resep.siapa(txt_user.getText());
+
+            if (rs.next()) {
+                if (rs.getString("level").equals("Resepsionis")) {
                     resep.setVisible(true);
-                    this.dispose();  
-                } else if(rs.getString("level").equals("Administrator")){
+                    this.dispose();
+                } else if (rs.getString("level").equals("Administrator")) {
                     admin.setVisible(true);
-                    this.dispose();  
-                } else{
-                    JOptionPane.showMessageDialog(this,"Akses ditolak!");
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Akses ditolak!");
                 }
-            } else{
-                JOptionPane.showMessageDialog(this,"Anda tidak memiliki hak akses!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Anda tidak memiliki hak akses!");
             }
-            
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Server tidak tersambung!");
+            JOptionPane.showMessageDialog(this, "Server tidak tersambung!");
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 25, 2018 at 03:33 PM
+-- Generation Time: Mar 27, 2018 at 05:22 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 7.0.13
 
@@ -118,11 +118,18 @@ INSERT INTO `tb_pegawai` (`id_karyawan`, `nama`, `gender`, `alamat`, `level`) VA
 --
 
 CREATE TABLE `tb_pemesanan` (
-  `kode_booking` varchar(6) NOT NULL,
+  `kode_booking` varchar(20) NOT NULL,
   `nik` varchar(30) NOT NULL,
-  `id_karyawan` varchar(6) NOT NULL,
-  `harga_total` int(10) NOT NULL
+  `harga_total` int(10) NOT NULL,
+  `status` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tb_pemesanan`
+--
+
+INSERT INTO `tb_pemesanan` (`kode_booking`, `nik`, `harga_total`, `status`) VALUES
+('B2703182220', '74538947892', 10, 0);
 
 -- --------------------------------------------------------
 
@@ -131,11 +138,18 @@ CREATE TABLE `tb_pemesanan` (
 --
 
 CREATE TABLE `tb_pemesanan_in` (
-  `kode_booking` varchar(6) NOT NULL,
-  `id_kamar` varchar(5) NOT NULL,
-  `hari` varchar(7) NOT NULL,
+  `kode_booking` varchar(20) NOT NULL,
+  `id_kamar` int(3) NOT NULL,
   `tanggal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tb_pemesanan_in`
+--
+
+INSERT INTO `tb_pemesanan_in` (`kode_booking`, `id_kamar`, `tanggal`) VALUES
+('B2703182220', 4, '2018-02-04'),
+('B2703182220', 5, '2018-02-04');
 
 -- --------------------------------------------------------
 
@@ -144,11 +158,18 @@ CREATE TABLE `tb_pemesanan_in` (
 --
 
 CREATE TABLE `tb_pemesanan_out` (
-  `kode_booking` varchar(6) NOT NULL,
-  `id_kamar` varchar(5) NOT NULL,
-  `hari` varchar(7) NOT NULL,
+  `kode_booking` varchar(20) NOT NULL,
+  `id_kamar` int(3) NOT NULL,
   `tanggal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tb_pemesanan_out`
+--
+
+INSERT INTO `tb_pemesanan_out` (`kode_booking`, `id_kamar`, `tanggal`) VALUES
+('B2703182220', 4, '2018-02-05'),
+('B2703182220', 5, '2018-02-05');
 
 -- --------------------------------------------------------
 
@@ -163,6 +184,14 @@ CREATE TABLE `tb_tamu` (
   `telepon` varchar(15) NOT NULL,
   `gender` varchar(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tb_tamu`
+--
+
+INSERT INTO `tb_tamu` (`nik`, `nama`, `alamat`, `telepon`, `gender`) VALUES
+('452347297', 'dhjwhrwkj', 'rktweruj', 'djthwehrwiu', 'L'),
+('74538947892', 'djkahfjkda', 'jrwehquih', '579823475283', 'L');
 
 --
 -- Indexes for dumped tables
@@ -198,14 +227,13 @@ ALTER TABLE `tb_pegawai`
 --
 ALTER TABLE `tb_pemesanan`
   ADD PRIMARY KEY (`kode_booking`),
-  ADD KEY `nik` (`nik`),
-  ADD KEY `id_karyawan` (`id_karyawan`);
+  ADD KEY `nik` (`nik`);
 
 --
 -- Indexes for table `tb_pemesanan_in`
 --
 ALTER TABLE `tb_pemesanan_in`
-  ADD UNIQUE KEY `kode_booking` (`kode_booking`),
+  ADD KEY `kode_booking` (`kode_booking`),
   ADD KEY `id_kamar` (`id_kamar`);
 
 --

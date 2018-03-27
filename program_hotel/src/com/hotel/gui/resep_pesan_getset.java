@@ -1,113 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.hotel.gui;
 
-/**
- *
- * @author Gedalya Anugrah
- */
 public class resep_pesan_getset {
-    private String booking;
-    private String tipe1;
-    private String tipe2;
-    private String tipe3;
-    private String jml1;
-    private String jml2;
-    private String jml3;
-    private String tgli;
-    private String tglo;
-    private String kar;
-    
     private String nik;
     private String nama;
-    private String jenis;
+    private String gender;
     private String alamat;
-    private String hp;
+    private String notelp;
+    
+    private String booking;
+    private String tglin;
+    private String tglout;
+    private String sr;
+    private String dr;
+    private String fr;
+    
+    private String st;
+    private String har;
 
-    public String getBooking() {
-        return booking;
+    public String getSt() {
+        return st;
     }
 
-    public void setBooking(String booking) {
-        this.booking = booking;
+    public void setSt(String st) {
+        this.st = st;
     }
 
-    public String getTipe1() {
-        return tipe1;
+    public String getHar() {
+        return har;
     }
 
-    public void setTipe1(String tipe1) {
-        this.tipe1 = tipe1;
+    public void setHar(String har) {
+        this.har = har;
     }
 
-    public String getTipe2() {
-        return tipe2;
-    }
-
-    public void setTipe2(String tipe2) {
-        this.tipe2 = tipe2;
-    }
-
-    public String getTipe3() {
-        return tipe3;
-    }
-
-    public void setTipe3(String tipe3) {
-        this.tipe3 = tipe3;
-    }
-
-    public String getJml1() {
-        return jml1;
-    }
-
-    public void setJml1(String jml1) {
-        this.jml1 = jml1;
-    }
-
-    public String getJml2() {
-        return jml2;
-    }
-
-    public void setJml2(String jml2) {
-        this.jml2 = jml2;
-    }
-
-    public String getJml3() {
-        return jml3;
-    }
-
-    public void setJml3(String jml3) {
-        this.jml3 = jml3;
-    }
-
-    public String getTgli() {
-        return tgli;
-    }
-
-    public void setTgli(String tgli) {
-        this.tgli = tgli;
-    }
-
-    public String getTglo() {
-        return tglo;
-    }
-
-    public void setTglo(String tglo) {
-        this.tglo = tglo;
-    }
-
-    public String getKar() {
-        return kar;
-    }
-
-    public void setKar(String kar) {
-        this.kar = kar;
-    }
-
-    ////////////////////////////////////
     public String getNik() {
         return nik;
     }
@@ -124,12 +49,12 @@ public class resep_pesan_getset {
         this.nama = nama;
     }
 
-    public String getJenis() {
-        return jenis;
+    public String getGender() {
+        return gender;
     }
 
-    public void setJenis(String jenis) {
-        this.jenis = jenis;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAlamat() {
@@ -140,12 +65,60 @@ public class resep_pesan_getset {
         this.alamat = alamat;
     }
 
-    public String getHp() {
-        return hp;
+    public String getNotelp() {
+        return notelp;
     }
 
-    public void setHp(String hp) {
-        this.hp = hp;
+    public void setNotelp(String notelp) {
+        this.notelp = notelp;
+    }
+
+    public String getBooking() {
+        return booking;
+    }
+
+    public void setBooking(String booking) {
+        this.booking = booking;
+    }
+
+    public String getTglin() {
+        return tglin;
+    }
+
+    public void setTglin(String tglin) {
+        this.tglin = tglin;
+    }
+
+    public String getTglout() {
+        return tglout;
+    }
+
+    public void setTglout(String tglout) {
+        this.tglout = tglout;
+    }
+
+    public String getSr() {
+        return sr;
+    }
+
+    public void setSr(String sr) {
+        this.sr = sr;
+    }
+
+    public String getDr() {
+        return dr;
+    }
+
+    public void setDr(String dr) {
+        this.dr = dr;
+    }
+
+    public String getFr() {
+        return fr;
+    }
+
+    public void setFr(String fr) {
+        this.fr = fr;
     }
     
     
