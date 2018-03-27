@@ -175,13 +175,15 @@ public class LOGIN extends javax.swing.JFrame {
             st = conn.createStatement();
             rs = st.executeQuery(sql);
             
+            RESEPSIONIS resep = new RESEPSIONIS();
+            ADMIN admin = new ADMIN();
+            
             if(rs.next()){
-                if(rs.getString("level").equals("Resepsionis")){
-                    RESEPSIONIS resep = new RESEPSIONIS();
+                if(rs.getString("level").equals("Resepsionis")){         
+                    resep.siapa(txt_user.getText());
                     resep.setVisible(true);
                     this.dispose();  
                 } else if(rs.getString("level").equals("Administrator")){
-                    ADMIN admin = new ADMIN();
                     admin.setVisible(true);
                     this.dispose();  
                 } else{
@@ -190,6 +192,7 @@ public class LOGIN extends javax.swing.JFrame {
             } else{
                 JOptionPane.showMessageDialog(this,"Anda tidak memiliki hak akses!");
             }
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,"Server tidak tersambung!");
         }

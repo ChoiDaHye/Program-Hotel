@@ -1,6 +1,6 @@
 package com.hotel.dao;
 
-import com.hotel.gui.resep_pemesan_getset;
+import com.hotel.gui.*;
 import com.hotel.script.koneksi;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class resep_pemesan_dao {
         }
     }
 
-    public boolean masukDataPemesan(resep_pemesan_getset gs) {
+    public boolean masukDataPemesan(resep_pesan_getset gs) {
         try {
             ps = con.prepareStatement("INSERT INTO tb_tamu(nik, nama, gender, alamat, telepon) values (?, ?, ?, ?, ?)");
             ps.setString(1, gs.getNik());
@@ -32,10 +32,9 @@ public class resep_pemesan_dao {
             ps.setString(4, gs.getAlamat());
             ps.setString(5, gs.getHp());
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data Pemesan Ditambahkan!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data Pemesan!\n" + e);
         }
         return false;
     }
