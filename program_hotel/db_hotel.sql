@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2018 at 05:22 PM
--- Server version: 10.1.19-MariaDB
+-- Generation Time: 01 Apr 2018 pada 14.48
+-- Versi Server: 10.1.19-MariaDB
 -- PHP Version: 7.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_kamar`
+-- Struktur dari tabel `tb_kamar`
 --
 
 CREATE TABLE `tb_kamar` (
@@ -35,21 +35,55 @@ CREATE TABLE `tb_kamar` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_kamar`
+-- Dumping data untuk tabel `tb_kamar`
 --
 
 INSERT INTO `tb_kamar` (`id_kamar`, `lantai`, `id_tipe`, `status`, `jumlah`) VALUES
-(1, 1, 1, 1, 1),
-(2, 1, 1, 1, 1),
-(3, 1, 2, 1, 1),
-(4, 1, 2, 1, 1),
-(5, 1, 3, 1, 1),
-(6, 1, 1, 2, 1);
+(1, 1, 1, 2, 1),
+(2, 1, 1, 2, 1),
+(3, 1, 1, 2, 1),
+(4, 1, 1, 2, 1),
+(5, 1, 1, 1, 1),
+(6, 1, 1, 2, 1),
+(7, 1, 1, 1, 1),
+(8, 1, 1, 1, 1),
+(9, 1, 1, 1, 1),
+(10, 1, 1, 1, 1),
+(11, 1, 1, 1, 1),
+(12, 1, 1, 1, 1),
+(13, 1, 1, 1, 1),
+(14, 1, 1, 1, 1),
+(15, 1, 1, 1, 1),
+(16, 2, 1, 1, 1),
+(17, 2, 1, 1, 1),
+(18, 2, 1, 1, 1),
+(19, 2, 1, 1, 1),
+(20, 2, 1, 1, 1),
+(21, 2, 3, 1, 1),
+(22, 2, 3, 1, 1),
+(23, 2, 3, 1, 1),
+(24, 2, 3, 1, 1),
+(25, 2, 3, 1, 1),
+(26, 2, 3, 1, 1),
+(27, 2, 3, 1, 1),
+(28, 2, 3, 1, 1),
+(29, 2, 3, 1, 1),
+(30, 2, 3, 1, 1),
+(31, 3, 2, 2, 1),
+(32, 3, 2, 2, 1),
+(33, 3, 2, 1, 1),
+(34, 3, 2, 1, 1),
+(35, 3, 2, 1, 1),
+(36, 3, 2, 1, 1),
+(37, 3, 2, 1, 1),
+(38, 3, 2, 1, 1),
+(39, 3, 2, 1, 1),
+(40, 3, 2, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_kamar_tipe`
+-- Struktur dari tabel `tb_kamar_tipe`
 --
 
 CREATE TABLE `tb_kamar_tipe` (
@@ -59,7 +93,7 @@ CREATE TABLE `tb_kamar_tipe` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_kamar_tipe`
+-- Dumping data untuk tabel `tb_kamar_tipe`
 --
 
 INSERT INTO `tb_kamar_tipe` (`id_tipe`, `nama_tipe`, `harga`) VALUES
@@ -70,7 +104,7 @@ INSERT INTO `tb_kamar_tipe` (`id_tipe`, `nama_tipe`, `harga`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_login`
+-- Struktur dari tabel `tb_login`
 --
 
 CREATE TABLE `tb_login` (
@@ -80,7 +114,7 @@ CREATE TABLE `tb_login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_login`
+-- Dumping data untuk tabel `tb_login`
 --
 
 INSERT INTO `tb_login` (`id`, `user`, `pass`) VALUES
@@ -91,7 +125,7 @@ INSERT INTO `tb_login` (`id`, `user`, `pass`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_pegawai`
+-- Struktur dari tabel `tb_pegawai`
 --
 
 CREATE TABLE `tb_pegawai` (
@@ -103,7 +137,7 @@ CREATE TABLE `tb_pegawai` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_pegawai`
+-- Dumping data untuk tabel `tb_pegawai`
 --
 
 INSERT INTO `tb_pegawai` (`id_karyawan`, `nama`, `gender`, `alamat`, `level`) VALUES
@@ -114,67 +148,72 @@ INSERT INTO `tb_pegawai` (`id_karyawan`, `nama`, `gender`, `alamat`, `level`) VA
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_pemesanan`
+-- Struktur dari tabel `tb_pemesanan`
 --
 
 CREATE TABLE `tb_pemesanan` (
   `kode_booking` varchar(20) NOT NULL,
   `nik` varchar(30) NOT NULL,
-  `harga_total` int(10) NOT NULL,
-  `status` int(1) NOT NULL
+  `t_r` date NOT NULL,
+  `t_in` date NOT NULL,
+  `t_out` date NOT NULL,
+  `lama` int(3) NOT NULL,
+  `harga_total` int(10) DEFAULT NULL,
+  `status` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_pemesanan`
+-- Dumping data untuk tabel `tb_pemesanan`
 --
 
-INSERT INTO `tb_pemesanan` (`kode_booking`, `nik`, `harga_total`, `status`) VALUES
-('B2703182220', '74538947892', 10, 0);
+INSERT INTO `tb_pemesanan` (`kode_booking`, `nik`, `t_r`, `t_in`, `t_out`, `lama`, `harga_total`, `status`) VALUES
+('B0104181528', '672017191', '2018-04-01', '2018-04-01', '2018-04-02', 1, 2235000, 0),
+('B0104181552', '672017183', '2018-04-01', '2018-04-02', '2018-04-04', 2, 3960000, 0),
+('B3103181233', '672017180', '2018-03-28', '2018-03-29', '2018-03-31', 2, 3960000, 1),
+('B3103181438', '672017182', '2018-03-31', '2018-03-31', '2018-04-04', 4, 7920000, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_pemesanan_in`
+-- Struktur dari tabel `tb_pemesanan_detail`
 --
 
-CREATE TABLE `tb_pemesanan_in` (
+CREATE TABLE `tb_pemesanan_detail` (
   `kode_booking` varchar(20) NOT NULL,
-  `id_kamar` int(3) NOT NULL,
-  `tanggal` date NOT NULL
+  `id_kamar` int(3) DEFAULT NULL,
+  `harga` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_pemesanan_in`
+-- Dumping data untuk tabel `tb_pemesanan_detail`
 --
 
-INSERT INTO `tb_pemesanan_in` (`kode_booking`, `id_kamar`, `tanggal`) VALUES
-('B2703182220', 4, '2018-02-04'),
-('B2703182220', 5, '2018-02-04');
+INSERT INTO `tb_pemesanan_detail` (`kode_booking`, `id_kamar`, `harga`) VALUES
+('B3103181233', 2, 745000),
+('B3103181233', 31, 1235000),
+('B3103181438', 2, 745000),
+('B3103181438', 32, 1235000),
+('B0104181528', 1, 745000),
+('B0104181528', 3, 745000),
+('B0104181528', 4, 745000),
+('B0104181552', 31, 1235000),
+('B0104181552', 6, 745000);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_pemesanan_out`
+-- Struktur dari tabel `tb_pemesanan_tmp`
 --
 
-CREATE TABLE `tb_pemesanan_out` (
-  `kode_booking` varchar(20) NOT NULL,
+CREATE TABLE `tb_pemesanan_tmp` (
   `id_kamar` int(3) NOT NULL,
-  `tanggal` date NOT NULL
+  `harga` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `tb_pemesanan_out`
---
-
-INSERT INTO `tb_pemesanan_out` (`kode_booking`, `id_kamar`, `tanggal`) VALUES
-('B2703182220', 4, '2018-02-05'),
-('B2703182220', 5, '2018-02-05');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tb_tamu`
+-- Struktur dari tabel `tb_tamu`
 --
 
 CREATE TABLE `tb_tamu` (
@@ -186,12 +225,14 @@ CREATE TABLE `tb_tamu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `tb_tamu`
+-- Dumping data untuk tabel `tb_tamu`
 --
 
 INSERT INTO `tb_tamu` (`nik`, `nama`, `alamat`, `telepon`, `gender`) VALUES
-('452347297', 'dhjwhrwkj', 'rktweruj', 'djthwehrwiu', 'L'),
-('74538947892', 'djkahfjkda', 'jrwehquih', '579823475283', 'L');
+('672017180', 'Choaz Bone', 'Seruni', '081234567890', 'L'),
+('672017182', 'Gedalya', 'Cungkup', '081234567890', 'L'),
+('672017183', 'Yosef', 'Bumi', '081234567890', 'L'),
+('672017191', 'Rehuel', 'Bumi', '081234567890', 'L');
 
 --
 -- Indexes for dumped tables
@@ -230,16 +271,9 @@ ALTER TABLE `tb_pemesanan`
   ADD KEY `nik` (`nik`);
 
 --
--- Indexes for table `tb_pemesanan_in`
+-- Indexes for table `tb_pemesanan_detail`
 --
-ALTER TABLE `tb_pemesanan_in`
-  ADD KEY `kode_booking` (`kode_booking`),
-  ADD KEY `id_kamar` (`id_kamar`);
-
---
--- Indexes for table `tb_pemesanan_out`
---
-ALTER TABLE `tb_pemesanan_out`
+ALTER TABLE `tb_pemesanan_detail`
   ADD KEY `kode_booking` (`kode_booking`),
   ADD KEY `id_kamar` (`id_kamar`);
 
@@ -257,7 +291,7 @@ ALTER TABLE `tb_tamu`
 -- AUTO_INCREMENT for table `tb_kamar`
 --
 ALTER TABLE `tb_kamar`
-  MODIFY `id_kamar` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_kamar` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
