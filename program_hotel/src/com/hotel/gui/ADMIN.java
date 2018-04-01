@@ -654,6 +654,7 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel66 = new javax.swing.JLabel();
+        btn_back_kamar1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -861,9 +862,9 @@ public class ADMIN extends javax.swing.JFrame {
                 .addComponent(panel_laporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(menuLayout.createSequentialGroup()
-                .addContainerGap(702, Short.MAX_VALUE)
+                .addContainerGap(1119, Short.MAX_VALUE)
                 .addComponent(btn_logout)
-                .addContainerGap(702, Short.MAX_VALUE))
+                .addContainerGap(1119, Short.MAX_VALUE))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1005,38 +1006,39 @@ public class ADMIN extends javax.swing.JFrame {
             pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(pegawaiLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(503, Short.MAX_VALUE)
                 .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pegawaiLayout.createSequentialGroup()
-                        .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pegawaiLayout.createSequentialGroup()
-                                .addGap(127, 127, 127)
-                                .addComponent(rdo_lk)
-                                .addGap(35, 35, 35)
-                                .addComponent(rdo_pr))
-                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
-                                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel12)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jLabel15)
-                                        .addComponent(jLabel16)
-                                        .addComponent(jLabel17))
-                                    .addGap(45, 45, 45)
-                                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cmb_posisi_pegawai, 0, 506, Short.MAX_VALUE)
-                                        .addComponent(txt_alamat_pegawai)
-                                        .addComponent(txt_nama_pegawai)
-                                        .addComponent(txt_id_pegawai)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
-                                    .addComponent(btn_save_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(15, 15, 15)
-                                    .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(15, 15, 15)
-                                    .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btn_back_pegawai))
+                        .addGap(127, 127, 127)
+                        .addComponent(rdo_lk)
+                        .addGap(35, 35, 35)
+                        .addComponent(rdo_pr))
+                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
+                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13)
+                                .addComponent(jLabel15)
+                                .addComponent(jLabel16)
+                                .addComponent(jLabel17))
+                            .addGap(45, 45, 45)
+                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cmb_posisi_pegawai, 0, 506, Short.MAX_VALUE)
+                                .addComponent(txt_alamat_pegawai)
+                                .addComponent(txt_nama_pegawai)
+                                .addComponent(txt_id_pegawai)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
+                            .addComponent(btn_save_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(15, 15, 15)
+                            .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(15, 15, 15)
+                            .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(504, Short.MAX_VALUE))
+            .addGroup(pegawaiLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_back_pegawai)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1076,9 +1078,9 @@ public class ADMIN extends javax.swing.JFrame {
                             .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(btn_back_pegawai)
-                .addGap(30, 30, 30))
+                .addGap(25, 25, 25))
         );
 
         pegawaiLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_posisi_pegawai, txt_alamat_pegawai});
@@ -1164,22 +1166,23 @@ public class ADMIN extends javax.swing.JFrame {
             .addGroup(akunLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(akunLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
-                                .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel62)
-                                    .addComponent(jLabel63)
-                                    .addComponent(jLabel64))
-                                .addGap(58, 58, 58)
-                                .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txt_username_akun, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                                    .addComponent(txt_id_akun)
-                                    .addComponent(txt_password_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(btn_edit_akun, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btn_back_akun))
+                            .addComponent(jLabel62)
+                            .addComponent(jLabel63)
+                            .addComponent(jLabel64))
+                        .addGap(58, 58, 58)
+                        .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_username_akun, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                            .addComponent(txt_id_akun)
+                            .addComponent(txt_password_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btn_edit_akun, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(akunLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_back_akun)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1209,7 +1212,7 @@ public class ADMIN extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_akun)
-                .addGap(30, 30, 30))
+                .addGap(25, 25, 25))
         );
 
         akunLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_password_akun, txt_username_akun});
@@ -1332,30 +1335,31 @@ public class ADMIN extends javax.swing.JFrame {
             .addGroup(kamarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(kamarLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
                         .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
-                                .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel22)
-                                    .addComponent(jLabel23)
-                                    .addComponent(jLabel24)
-                                    .addComponent(jLabel25))
-                                .addGap(45, 45, 45)
-                                .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cmb_tipe_kamar, 0, 492, Short.MAX_VALUE)
-                                    .addComponent(txt_lantai_kamar)
-                                    .addComponent(txt_nomor_kamar)
-                                    .addComponent(cmb_status_kamar, 0, 492, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
-                                .addComponent(btn_save_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(btn_edit_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(btn_hapus_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btn_back_kamar))
+                            .addComponent(jLabel22)
+                            .addComponent(jLabel23)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel25))
+                        .addGap(45, 45, 45)
+                        .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cmb_tipe_kamar, 0, 492, Short.MAX_VALUE)
+                            .addComponent(txt_lantai_kamar)
+                            .addComponent(txt_nomor_kamar)
+                            .addComponent(cmb_status_kamar, 0, 492, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
+                        .addComponent(btn_save_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)
+                        .addComponent(btn_edit_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(15, 15, 15)
+                        .addComponent(btn_hapus_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(kamarLayout.createSequentialGroup()
+                .addContainerGap(621, Short.MAX_VALUE)
+                .addComponent(btn_back_kamar)
+                .addContainerGap(621, Short.MAX_VALUE))
         );
 
         kamarLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel22, jLabel23, jLabel24, jLabel25});
@@ -1391,7 +1395,7 @@ public class ADMIN extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_kamar)
-                .addGap(30, 30, 30))
+                .addGap(25, 25, 25))
         );
 
         kamarLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel22, jLabel23, jLabel24, jLabel25, txt_nomor_kamar});
@@ -1401,6 +1405,11 @@ public class ADMIN extends javax.swing.JFrame {
         main_panel.add(kamar, "card3");
 
         laporan.setBackground(new java.awt.Color(255, 255, 255));
+        laporan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                laporanMouseEntered(evt);
+            }
+        });
 
         pemesanan.setBackground(new java.awt.Color(255, 255, 255));
         pemesanan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -1487,17 +1496,30 @@ public class ADMIN extends javax.swing.JFrame {
         jLabel66.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel66.setText("Laporan");
 
+        btn_back_kamar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_back.png"))); // NOI18N
+        btn_back_kamar1.setToolTipText("Menu");
+        btn_back_kamar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_back_kamar1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_back_kamar1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout laporanLayout = new javax.swing.GroupLayout(laporan);
         laporan.setLayout(laporanLayout);
         laporanLayout.setHorizontalGroup(
             laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(laporanLayout.createSequentialGroup()
-                .addContainerGap(320, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(penerimaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(320, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jLabel66, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, laporanLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_back_kamar1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         laporanLayout.setVerticalGroup(
             laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1508,7 +1530,9 @@ public class ADMIN extends javax.swing.JFrame {
                 .addGroup(laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(penerimaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addComponent(btn_back_kamar1)
+                .addGap(25, 25, 25))
         );
 
         main_panel.add(laporan, "card3");
@@ -1755,6 +1779,15 @@ public class ADMIN extends javax.swing.JFrame {
         toMenu();
     }//GEN-LAST:event_btn_back_pegawaiMouseClicked
 
+    private void btn_back_kamar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_kamar1MouseClicked
+        toMenu();
+    }//GEN-LAST:event_btn_back_kamar1MouseClicked
+
+    private void laporanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_laporanMouseEntered
+        resetColor(penerimaan);
+        resetColor(pemesanan);
+    }//GEN-LAST:event_laporanMouseEntered
+
     /**
      * @param args the command line arguments
      */
@@ -1794,6 +1827,7 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JPanel akun;
     private javax.swing.JLabel btn_back_akun;
     private javax.swing.JLabel btn_back_kamar;
+    private javax.swing.JLabel btn_back_kamar1;
     private javax.swing.JLabel btn_back_pegawai;
     private javax.swing.JLabel btn_edit_akun;
     private javax.swing.JLabel btn_edit_kamar;
