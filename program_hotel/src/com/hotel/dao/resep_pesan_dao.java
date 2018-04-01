@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import com.hotel.gui.*;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class resep_pesan_dao {
 
@@ -28,274 +30,68 @@ public class resep_pesan_dao {
             ps.setString(4, gs.getAlamat());
             ps.setString(5, gs.getNotelp());
             ps.executeUpdate();
-            
+
             JOptionPane.showMessageDialog(null, "Data tamu berhasi ditambahkan!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data tamu gagal ditambahkan!" + e);
+            JOptionPane.showMessageDialog(null, "Data tamu gagal ditambahkan!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
 
-    public boolean masukDataPemesanan1(resep_pesan_getset gs) {
+    public boolean masukDataPemesanan(resep_pesan_getset gs) {
         try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
+            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, t_in, t_out, lama, t_r, status) values (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, gs.getBooking());
             ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
+            ps.setString(3, gs.getTglin());
+            ps.setString(4, gs.getTglout());
+            ps.setInt(5, gs.getLm());
+            ps.setString(6, gs.getTglr());
+            ps.setString(7, "0");
             ps.executeUpdate();
-            
-            ps1 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps1.setString(1, gs.getBooking());
-            ps1.setString(2, gs.getSr());
-            ps1.setString(3, gs.getTglin());
-            ps1.executeUpdate();
-            
-            ps2 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps2.setString(1, gs.getBooking());
-            ps2.setString(2, gs.getDr());
-            ps2.setString(3, gs.getTglin());
-            ps2.executeUpdate();
-            
-            ps3 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps3.setString(1, gs.getBooking());
-            ps3.setString(2, gs.getFr());
-            ps3.setString(3, gs.getTglin());
-            ps3.executeUpdate();
-            
-            ps4 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps4.setString(1, gs.getBooking());
-            ps4.setString(2, gs.getSr());
-            ps4.setString(3, gs.getTglout());
+
+            //AMBIL SEMUA DATA DARI tb_pemesanan_tmp
+            String sql = "SELECT * FROM tb_pemesanan_tmp";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                String id = rs.getString("id_kamar");
+                int har = rs.getInt("harga");
+
+                //MEMINDAHKAN DATA DARI tb_pemesanan_tmp KE tb_pemesanan_detail
+                ps2 = con.prepareStatement("INSERT INTO tb_pemesanan_detail(kode_booking, id_kamar, harga) values (?, ?, ?)");
+                ps2.setString(1, gs.getBooking());
+                ps2.setString(2, id);
+                ps2.setInt(3, har);
+                ps2.executeUpdate();
+
+                //UPDATE STATUS KAMAR
+                ps3 = con.prepareStatement("UPDATE tb_kamar SET status = '2' WHERE id_kamar = '" + id + "'");
+                ps3.executeUpdate();
+
+                //UPDATE HARGA TOTAL
+                ps5 = con.prepareStatement("UPDATE tb_pemesanan SET harga_total = ((SELECT SUM(harga) FROM tb_pemesanan_tmp) * "+ gs.getLm() +") WHERE kode_booking = '" + gs.getBooking() + "'");
+                ps5.executeUpdate();
+            }           
+
+            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+    public boolean hapusDataTmp() {
+        try {
+            //HAPUS DATA PADA tb_pemesanan_tmp
+            ps4 = con.prepareStatement("DELETE FROM tb_pemesanan_tmp");
             ps4.executeUpdate();
-            
-            ps5 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps5.setString(1, gs.getBooking());
-            ps5.setString(2, gs.getDr());
-            ps5.setString(3, gs.getTglout());
-            ps5.executeUpdate();
-            
-            ps6 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps6.setString(1, gs.getBooking());
-            ps6.setString(2, gs.getFr());
-            ps6.setString(3, gs.getTglout());
-            ps6.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
+
+            JOptionPane.showMessageDialog(null, "Data tamu berhasi ditambahkan!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan2(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps1 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps1.setString(1, gs.getBooking());
-            ps1.setString(2, gs.getSr());
-            ps1.setString(3, gs.getTglin());
-            ps1.executeUpdate();
-            
-            ps2 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps2.setString(1, gs.getBooking());
-            ps2.setString(2, gs.getDr());
-            ps2.setString(3, gs.getTglin());
-            ps2.executeUpdate();
-            
-            ps4 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps4.setString(1, gs.getBooking());
-            ps4.setString(2, gs.getSr());
-            ps4.setString(3, gs.getTglout());
-            ps4.executeUpdate();
-            
-            ps5 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps5.setString(1, gs.getBooking());
-            ps5.setString(2, gs.getDr());
-            ps5.setString(3, gs.getTglout());
-            ps5.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan3(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps1 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps1.setString(1, gs.getBooking());
-            ps1.setString(2, gs.getSr());
-            ps1.setString(3, gs.getTglin());
-            ps1.executeUpdate();
-            
-            ps3 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps3.setString(1, gs.getBooking());
-            ps3.setString(2, gs.getFr());
-            ps3.setString(3, gs.getTglin());
-            ps3.executeUpdate();
-            
-            ps4 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps4.setString(1, gs.getBooking());
-            ps4.setString(2, gs.getSr());
-            ps4.setString(3, gs.getTglout());
-            ps4.executeUpdate();
-            
-            ps6 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps6.setString(1, gs.getBooking());
-            ps6.setString(2, gs.getFr());
-            ps6.setString(3, gs.getTglout());
-            ps6.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan4(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps2 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps2.setString(1, gs.getBooking());
-            ps2.setString(2, gs.getDr());
-            ps2.setString(3, gs.getTglin());
-            ps2.executeUpdate();
-            
-            ps3 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps3.setString(1, gs.getBooking());
-            ps3.setString(2, gs.getFr());
-            ps3.setString(3, gs.getTglin());
-            ps3.executeUpdate();
-            
-            ps5 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps5.setString(1, gs.getBooking());
-            ps5.setString(2, gs.getDr());
-            ps5.setString(3, gs.getTglout());
-            ps5.executeUpdate();
-            
-            ps6 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps6.setString(1, gs.getBooking());
-            ps6.setString(2, gs.getFr());
-            ps6.setString(3, gs.getTglout());
-            ps6.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan5(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps1 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps1.setString(1, gs.getBooking());
-            ps1.setString(2, gs.getSr());
-            ps1.setString(3, gs.getTglin());
-            ps1.executeUpdate();
-            
-            ps4 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps4.setString(1, gs.getBooking());
-            ps4.setString(2, gs.getSr());
-            ps4.setString(3, gs.getTglout());
-            ps4.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan6(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps2 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps2.setString(1, gs.getBooking());
-            ps2.setString(2, gs.getDr());
-            ps2.setString(3, gs.getTglin());
-            ps2.executeUpdate();
-            
-            ps5 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps5.setString(1, gs.getBooking());
-            ps5.setString(2, gs.getDr());
-            ps5.setString(3, gs.getTglout());
-            ps5.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
-        }
-        return false;
-    }
-    
-    public boolean masukDataPemesanan7(resep_pesan_getset gs) {
-        try {
-            ps = con.prepareStatement("INSERT INTO tb_pemesanan(kode_booking, nik, harga_total, status) values (?, ?, ?, ?)");
-            ps.setString(1, gs.getBooking());
-            ps.setString(2, gs.getNik());
-            ps.setString(3, gs.getHar());
-            ps.setString(4, gs.getSt());
-            ps.executeUpdate();
-            
-            ps3 = con.prepareStatement("INSERT INTO tb_pemesanan_in(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps3.setString(1, gs.getBooking());
-            ps3.setString(2, gs.getFr());
-            ps3.setString(3, gs.getTglin());
-            ps3.executeUpdate();
-            
-            ps6 = con.prepareStatement("INSERT INTO tb_pemesanan_out(kode_booking, id_kamar, tanggal) values (?, ?, ?)");
-            ps6.setString(1, gs.getBooking());
-            ps6.setString(2, gs.getFr());
-            ps6.setString(3, gs.getTglout());
-            ps6.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null, "Data pemesanan tersimpan!");
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Data pemesanan gagal ditambahkan!" + e);
+            JOptionPane.showMessageDialog(null, "Data tamu gagal ditambahkan!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }

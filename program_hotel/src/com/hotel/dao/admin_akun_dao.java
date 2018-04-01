@@ -29,7 +29,7 @@ public class admin_akun_dao {
             JOptionPane.showMessageDialog(null, "Data Akun Ditambahkan!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
@@ -45,7 +45,7 @@ public class admin_akun_dao {
             JOptionPane.showMessageDialog(null, "Data Akun Diubah!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Mengubah Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Mengubah Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
@@ -58,7 +58,7 @@ public class admin_akun_dao {
             JOptionPane.showMessageDialog(null, "Data Akun Dihapus!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Menghapus Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Menghapus Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }

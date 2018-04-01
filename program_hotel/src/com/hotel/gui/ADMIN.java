@@ -14,21 +14,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import com.hotel.dao.*;
+import java.awt.BorderLayout;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DatasetUtilities;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
  * @author Gedalya Anugrah
  */
 public class ADMIN extends javax.swing.JFrame {
+
     java.sql.Date sqldate;
     java.util.Date Date;
-    
+
     /**
      * Creates new form ADMIN
      */
     public ADMIN() {
         initComponents();
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+
     }
 
     void setColor(JPanel panel) {
@@ -45,7 +64,142 @@ public class ADMIN extends javax.swing.JFrame {
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(false);
-        diagram.setVisible(false);
+    }
+
+    void chart_reservasi() {
+        try {
+            String sql0 = "SELECT t_r FROM tb_pemesanan ORDER BY t_r ASC";
+            DefaultCategoryDataset io = new DefaultCategoryDataset();
+
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st0 = konek.createStatement();
+            ResultSet rs0 = st0.executeQuery(sql0);
+
+            while (rs0.next()) {
+                String tgl = rs0.getString("t_r");
+
+                String sql1 = "SELECT COUNT(*) FROM tb_pemesanan WHERE t_r = '" + tgl + "'";
+                Statement st1 = konek.createStatement();
+                ResultSet rs1 = st1.executeQuery(sql1);
+                String sql2 = "SELECT COUNT(*) FROM tb_pemesanan WHERE t_in = '" + tgl + "'";
+                Statement st2 = konek.createStatement();
+                ResultSet rs2 = st2.executeQuery(sql2);
+                String sql3 = "SELECT COUNT(*) FROM tb_pemesanan WHERE t_out = '" + tgl + "'";
+                Statement st3 = konek.createStatement();
+                ResultSet rs3 = st3.executeQuery(sql3);
+
+                while (rs1.next() && rs2.next() && rs3.next()) {
+                    io.setValue(rs1.getInt("COUNT(*)"), "Reservasi", tgl);
+                    io.setValue(rs2.getInt("COUNT(*)"), "Check In", tgl);
+                    io.setValue(rs3.getInt("COUNT(*)"), "Check Out", tgl);
+                }
+
+            }
+            JFreeChart chart = ChartFactory.createBarChart("Reservasi Progress", "Tanggal", "", io, PlotOrientation.VERTICAL, true, true, false);
+            ChartFrame pemesanan = new ChartFrame("Reservasi Progress", chart);
+            
+            pemesanan.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            pemesanan.setVisible(true);
+        } catch (Exception e) {
+        }
+    }
+
+    void chart_money() {
+        try {
+            String sql0 = "SELECT t_r FROM tb_pemesanan WHERE status = '1' ORDER BY t_r ASC";
+            DefaultCategoryDataset io = new DefaultCategoryDataset();
+
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st0 = konek.createStatement();
+            ResultSet rs0 = st0.executeQuery(sql0);
+
+            while (rs0.next()) {
+                String tgl = rs0.getString("t_r");
+
+                String sql1 = "SELECT harga_total FROM tb_pemesanan WHERE t_r = '" + tgl + "'";
+                Statement st1 = konek.createStatement();
+                ResultSet rs1 = st1.executeQuery(sql1);
+
+                while (rs1.next()) {
+                    io.setValue(rs1.getInt("harga_total"), "Penerimaan", tgl);
+                }
+            }
+            JFreeChart chart = ChartFactory.createBarChart("Money Progress", "Tanggal", "", io, PlotOrientation.VERTICAL, true, true, false);
+            ChartFrame uang = new ChartFrame("Reservasi Progress", chart);
+
+            uang.setDefaultCloseOperation(ChartFrame.DO_NOTHING_ON_CLOSE);
+            uang.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                    if (JOptionPane.showConfirmDialog(uang,
+                            "Anda ingin mencetak laporan\n penerimaan bulan ini?", "Cetak Laporan?",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                        money_cetak();
+                        uang.dispose();
+                    } else {
+                        uang.dispose();
+                    }
+                }
+            });
+
+            uang.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            uang.setVisible(true);
+        } catch (Exception e) {
+        }
+    }
+
+    void money_cetak() {
+        try {
+            LocalDate localDate = LocalDate.now();
+            String ini = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(localDate);
+            String ini1 = DateTimeFormatter.ofPattern("MM").format(localDate);
+
+            String sql = "SELECT harga_total, t_out FROM tb_pemesanan WHERE MONTH(t_out) = '" + ini1 + "' AND status = '1'";
+            Connection konek = new com.hotel.script.koneksi().getCon();
+            Statement st = konek.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            String sql1 = "SELECT SUM(harga_total) FROM tb_pemesanan WHERE MONTH(t_out) = '" + ini1 + "' AND status = '1'";
+            Statement st1 = konek.createStatement();
+            ResultSet rs1 = st1.executeQuery(sql1);
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter("D:\\hotel\\laporan\\keuangan\\" + ini1 + " - " + ini + ".txt"));
+
+            bw.write("====================================================");
+            bw.newLine();
+            bw.write("                 GRAND CLARION HOTEL                ");
+            bw.newLine();
+            bw.write("Jl. Andi Pangeran Pettarani No.3, Tamalate, Makassar");
+            bw.newLine();
+            bw.write("====================================================");
+            bw.newLine();
+            bw.write("LAPORAN PENERIMAAN BULAN INI");
+            bw.newLine();
+            bw.newLine();
+
+            while (rs.next()) {
+                bw.write("TANGGAL   : " + rs.getString("t_out"));
+                bw.newLine();
+                bw.write("TERIMA    : " + rs.getString("harga_total"));
+                bw.newLine();
+                bw.newLine();
+            }
+            while (rs1.next()) {
+                bw.write("TOTAL     : " + rs1.getString(1));
+            }
+            bw.newLine();
+            bw.write("====================================================");
+            bw.newLine();
+            bw.write("                     " + ini + "");
+            bw.newLine();
+            bw.write("====================================================");
+            bw.close();
+
+            JOptionPane.showMessageDialog(this, "Laporan tercetak!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Laporan gagal tercetak!\n" + e);
+        }
     }
 
     //DATA KAMAR
@@ -64,21 +218,21 @@ public class ADMIN extends javax.swing.JFrame {
                 String NOMOR = rs.getString("id_kamar");
                 String LANTAI = rs.getString("lantai");
                 String TIPE = "";
-                if(rs.getString("id_tipe").equals("1")){
+                if (rs.getString("id_tipe").equals("1")) {
                     TIPE = "SUPERIOR ROOM";
                 }
-                if(rs.getString("id_tipe").equals("2")){
+                if (rs.getString("id_tipe").equals("2")) {
                     TIPE = "DELUXE ROOM";
                 }
-                if(rs.getString("id_tipe").equals("3")){
+                if (rs.getString("id_tipe").equals("3")) {
                     TIPE = "FAMILY ROOM";
                 }
-                
+
                 String STATUS = "";
-                if(rs.getString("status").equals("1")){
+                if (rs.getString("status").equals("1")) {
                     STATUS = "Kosong";
                 }
-                if(rs.getString("status").equals("2")){
+                if (rs.getString("status").equals("2")) {
                     STATUS = "Terisi";
                 }
 
@@ -91,20 +245,18 @@ public class ADMIN extends javax.swing.JFrame {
 
     void tulis_kamar() {
         try {
-            if (txt_nomor_kamar.getText().isEmpty() || 
-                txt_lantai_kamar.getText().isEmpty() || 
-                cmb_tipe_kamar.getSelectedIndex() == 0 ||
-                cmb_status_kamar.getSelectedIndex() == 0
-                )
-            {
+            if (txt_nomor_kamar.getText().isEmpty()
+                    || txt_lantai_kamar.getText().isEmpty()
+                    || cmb_tipe_kamar.getSelectedIndex() == 0
+                    || cmb_status_kamar.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
                 if (txt_nomor_kamar.getText().isEmpty()) {
                     txt_nomor_kamar.requestFocus();
                 } else if (txt_lantai_kamar.getText().isEmpty()) {
                     txt_lantai_kamar.requestFocus();
-                } else if (cmb_tipe_kamar.getSelectedIndex() == 0){
+                } else if (cmb_tipe_kamar.getSelectedIndex() == 0) {
                     cmb_tipe_kamar.requestFocus();
-                } else if (cmb_status_kamar.getSelectedIndex() == 0){
+                } else if (cmb_status_kamar.getSelectedIndex() == 0) {
                     cmb_status_kamar.requestFocus();
                 }
             } else {
@@ -116,10 +268,10 @@ public class ADMIN extends javax.swing.JFrame {
 
                 admin_kamar_dao dao = new admin_kamar_dao();
                 admin_kamar_getset gs = new admin_kamar_getset();
-                
+
                 gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
                 gs.setLantai(Integer.parseInt(txt_lantai_kamar.getText()));
-                
+
                 gs.setTipe(cmb_tipe_kamar.getSelectedIndex());
                 gs.setStatus(cmb_status_kamar.getSelectedIndex());
 
@@ -136,23 +288,21 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!\n" + e);
         }
     }
-    
+
     void ubah_kamar() {
         try {
-            if (txt_nomor_kamar.getText().isEmpty() || 
-                txt_lantai_kamar.getText().isEmpty() || 
-                cmb_tipe_kamar.getSelectedIndex() == 0 ||
-                cmb_status_kamar.getSelectedIndex() == 0
-                )
-            {
+            if (txt_nomor_kamar.getText().isEmpty()
+                    || txt_lantai_kamar.getText().isEmpty()
+                    || cmb_tipe_kamar.getSelectedIndex() == 0
+                    || cmb_status_kamar.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
                 if (txt_nomor_kamar.getText().isEmpty()) {
                     txt_nomor_kamar.requestFocus();
                 } else if (txt_lantai_kamar.getText().isEmpty()) {
                     txt_lantai_kamar.requestFocus();
-                } else if (cmb_tipe_kamar.getSelectedIndex() == 0){
+                } else if (cmb_tipe_kamar.getSelectedIndex() == 0) {
                     cmb_tipe_kamar.requestFocus();
-                } else if (cmb_status_kamar.getSelectedIndex() == 0){
+                } else if (cmb_status_kamar.getSelectedIndex() == 0) {
                     cmb_status_kamar.requestFocus();
                 }
             } else {
@@ -164,10 +314,10 @@ public class ADMIN extends javax.swing.JFrame {
 
                 admin_kamar_dao dao = new admin_kamar_dao();
                 admin_kamar_getset gs = new admin_kamar_getset();
-                
+
                 gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
                 gs.setLantai(Integer.parseInt(txt_lantai_kamar.getText()));
-                
+
                 gs.setTipe(cmb_tipe_kamar.getSelectedIndex());
                 gs.setStatus(cmb_status_kamar.getSelectedIndex());
 
@@ -192,23 +342,23 @@ public class ADMIN extends javax.swing.JFrame {
         int row = tb_kamar.getSelectedRow();
         int tipe = 0;
         int status = 0;
-        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("SUPERIOR ROOM")){
+        if (tb_kamar.getModel().getValueAt(row, 2).toString().equals("SUPERIOR ROOM")) {
             tipe = 1;
         }
-        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("DELUXE ROOM")){
+        if (tb_kamar.getModel().getValueAt(row, 2).toString().equals("DELUXE ROOM")) {
             tipe = 2;
         }
-        if(tb_kamar.getModel().getValueAt(row, 2).toString().equals("FAMILY ROOM")){
+        if (tb_kamar.getModel().getValueAt(row, 2).toString().equals("FAMILY ROOM")) {
             tipe = 3;
         }
-        
-        if(tb_kamar.getModel().getValueAt(row, 3).toString().equals("Kosong")){
+
+        if (tb_kamar.getModel().getValueAt(row, 3).toString().equals("Kosong")) {
             status = 1;
         }
-        if(tb_kamar.getModel().getValueAt(row, 3).toString().equals("Terisi")){
+        if (tb_kamar.getModel().getValueAt(row, 3).toString().equals("Terisi")) {
             status = 2;
         }
-        
+
         txt_nomor_kamar.setText(tb_kamar.getModel().getValueAt(row, 0).toString());
         txt_nomor_kamar.setEditable(false);
         txt_lantai_kamar.setText(tb_kamar.getModel().getValueAt(row, 1).toString());
@@ -216,7 +366,7 @@ public class ADMIN extends javax.swing.JFrame {
         cmb_tipe_kamar.setSelectedIndex(tipe);
         cmb_status_kamar.setSelectedIndex(status);
     }
-    
+
     // DATA PEGAWAI
     void tampil_pegawai() {
         DefaultTableModel dt;
@@ -277,16 +427,16 @@ public class ADMIN extends javax.swing.JFrame {
                 gs.setGender_pegawai(gender_group.getSelection().getActionCommand());
 
                 dao.masukDataPegawai(gs);
-                
+
                 admin_akun_dao dao1 = new admin_akun_dao();
                 admin_akun_getset gs1 = new admin_akun_getset();
-                
+
                 gs1.setId(txt_id_pegawai.getText());
                 gs1.setUser(txt_id_pegawai.getText());
                 gs1.setPass("");
-                
+
                 dao1.masukDataAkun(gs1);
-                
+
                 tampil_pegawai();
             }
             txt_id_pegawai.setText("");
@@ -363,7 +513,7 @@ public class ADMIN extends javax.swing.JFrame {
     }
 
     // DATA AKUN
-    void tampil_akun(){
+    void tampil_akun() {
         DefaultTableModel dt;
         Object[] baris = {"ID", "Username"};
         dt = new DefaultTableModel(null, baris);
@@ -384,9 +534,10 @@ public class ADMIN extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }
-    
-    void ubah_akun(){
-        try {if (txt_id_akun.getText().isEmpty()
+
+    void ubah_akun() {
+        try {
+            if (txt_id_akun.getText().isEmpty()
                     || txt_username_akun.getText().isEmpty()
                     || txt_password_akun.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "LENGKAPI DATA ANDA!");
@@ -399,7 +550,7 @@ public class ADMIN extends javax.swing.JFrame {
 
                 admin_akun_dao dao = new admin_akun_dao();
                 admin_akun_getset gs = new admin_akun_getset();
-                
+
                 gs.setId(txt_id_akun.getText());
                 gs.setUser(txt_username_akun.getText());
                 gs.setPass(txt_password_akun.getText());
@@ -414,12 +565,13 @@ public class ADMIN extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Kegagalan Sistem!");
         }
     }
-    
-    void klik_akun(){
+
+    void klik_akun() {
         int row = tb_akun.getSelectedRow();
         txt_id_akun.setText(tb_akun.getModel().getValueAt(row, 0).toString());
         txt_username_akun.setText(tb_akun.getModel().getValueAt(row, 1).toString());
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -446,9 +598,6 @@ public class ADMIN extends javax.swing.JFrame {
         panel_laporan = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        panel_chart = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         btn_logout = new javax.swing.JLabel();
         pegawai = new javax.swing.JPanel();
         btn_back_pegawai = new javax.swing.JLabel();
@@ -498,10 +647,12 @@ public class ADMIN extends javax.swing.JFrame {
         btn_hapus_kamar = new javax.swing.JLabel();
         cmb_status_kamar = new javax.swing.JComboBox<>();
         laporan = new javax.swing.JPanel();
-        btn_back_laporan = new javax.swing.JLabel();
-        jLabel65 = new javax.swing.JLabel();
-        diagram = new javax.swing.JPanel();
-        btn_back_diagram = new javax.swing.JLabel();
+        pemesanan = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        penerimaan = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         jLabel66 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -686,47 +837,6 @@ public class ADMIN extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        panel_chart.setBackground(new java.awt.Color(255, 255, 255));
-        panel_chart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        panel_chart.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panel_chartMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                panel_chartMouseEntered(evt);
-            }
-        });
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/data_chart.png"))); // NOI18N
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(50, 55, 61));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Diagram");
-        jLabel10.setToolTipText("");
-
-        javax.swing.GroupLayout panel_chartLayout = new javax.swing.GroupLayout(panel_chart);
-        panel_chart.setLayout(panel_chartLayout);
-        panel_chartLayout.setHorizontalGroup(
-            panel_chartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_chartLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_chartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        panel_chartLayout.setVerticalGroup(
-            panel_chartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_chartLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
         btn_logout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_logout.png"))); // NOI18N
         btn_logout.setToolTipText("Logout");
         btn_logout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -742,31 +852,29 @@ public class ADMIN extends javax.swing.JFrame {
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(menuLayout.createSequentialGroup()
-                        .addComponent(panel_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(panel_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(panel_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(panel_laporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(panel_chart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btn_logout))
+                .addComponent(panel_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(panel_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(panel_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(panel_laporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(menuLayout.createSequentialGroup()
+                .addContainerGap(702, Short.MAX_VALUE)
+                .addComponent(btn_logout)
+                .addContainerGap(702, Short.MAX_VALUE))
         );
         menuLayout.setVerticalGroup(
             menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(menuLayout.createSequentialGroup()
-                .addContainerGap(138, Short.MAX_VALUE)
+                .addGap(198, 198, 198)
                 .addGroup(menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_chart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_laporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
                 .addComponent(btn_logout)
                 .addGap(25, 25, 25))
         );
@@ -900,36 +1008,35 @@ public class ADMIN extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pegawaiLayout.createSequentialGroup()
-                        .addGap(127, 127, 127)
-                        .addComponent(rdo_lk)
-                        .addGap(35, 35, 35)
-                        .addComponent(rdo_pr))
-                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
-                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel12)
-                                .addComponent(jLabel13)
-                                .addComponent(jLabel15)
-                                .addComponent(jLabel16)
-                                .addComponent(jLabel17))
-                            .addGap(45, 45, 45)
-                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cmb_posisi_pegawai, 0, 506, Short.MAX_VALUE)
-                                .addComponent(txt_alamat_pegawai)
-                                .addComponent(txt_nama_pegawai)
-                                .addComponent(txt_id_pegawai)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
-                            .addComponent(btn_save_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(15, 15, 15)
-                            .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(15, 15, 15)
-                            .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pegawaiLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_back_pegawai)
+                        .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pegawaiLayout.createSequentialGroup()
+                                .addGap(127, 127, 127)
+                                .addComponent(rdo_lk)
+                                .addGap(35, 35, 35)
+                                .addComponent(rdo_pr))
+                            .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
+                                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel12)
+                                        .addComponent(jLabel13)
+                                        .addComponent(jLabel15)
+                                        .addComponent(jLabel16)
+                                        .addComponent(jLabel17))
+                                    .addGap(45, 45, 45)
+                                    .addGroup(pegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cmb_posisi_pegawai, 0, 506, Short.MAX_VALUE)
+                                        .addComponent(txt_alamat_pegawai)
+                                        .addComponent(txt_nama_pegawai)
+                                        .addComponent(txt_id_pegawai)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pegawaiLayout.createSequentialGroup()
+                                    .addComponent(btn_save_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(15, 15, 15)
+                                    .addComponent(btn_edit_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(15, 15, 15)
+                                    .addComponent(btn_hapus_pegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_back_pegawai))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -971,7 +1078,7 @@ public class ADMIN extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btn_back_pegawai)
-                .addGap(25, 25, 25))
+                .addGap(30, 30, 30))
         );
 
         pegawaiLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_posisi_pegawai, txt_alamat_pegawai});
@@ -1057,23 +1164,22 @@ public class ADMIN extends javax.swing.JFrame {
             .addGroup(akunLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
+                    .addGroup(akunLayout.createSequentialGroup()
                         .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel62)
-                            .addComponent(jLabel63)
-                            .addComponent(jLabel64))
-                        .addGap(58, 58, 58)
-                        .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_username_akun, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                            .addComponent(txt_id_akun)
-                            .addComponent(txt_password_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btn_edit_akun, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(akunLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_back_akun)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, akunLayout.createSequentialGroup()
+                                .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel62)
+                                    .addComponent(jLabel63)
+                                    .addComponent(jLabel64))
+                                .addGap(58, 58, 58)
+                                .addGroup(akunLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txt_username_akun, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                                    .addComponent(txt_id_akun)
+                                    .addComponent(txt_password_akun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btn_edit_akun, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_back_akun))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1103,7 +1209,7 @@ public class ADMIN extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_akun)
-                .addGap(25, 25, 25))
+                .addGap(30, 30, 30))
         );
 
         akunLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_password_akun, txt_username_akun});
@@ -1226,30 +1332,30 @@ public class ADMIN extends javax.swing.JFrame {
             .addGroup(kamarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
+                    .addGroup(kamarLayout.createSequentialGroup()
                         .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel22)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel25))
-                        .addGap(45, 45, 45)
-                        .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_tipe_kamar, 0, 492, Short.MAX_VALUE)
-                            .addComponent(txt_lantai_kamar)
-                            .addComponent(txt_nomor_kamar)
-                            .addComponent(cmb_status_kamar, 0, 492, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
-                        .addComponent(btn_save_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)
-                        .addComponent(btn_edit_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)
-                        .addComponent(btn_hapus_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(50, 50, 50)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
+                                .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel22)
+                                    .addComponent(jLabel23)
+                                    .addComponent(jLabel24)
+                                    .addComponent(jLabel25))
+                                .addGap(45, 45, 45)
+                                .addGroup(kamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmb_tipe_kamar, 0, 492, Short.MAX_VALUE)
+                                    .addComponent(txt_lantai_kamar)
+                                    .addComponent(txt_nomor_kamar)
+                                    .addComponent(cmb_status_kamar, 0, 492, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, kamarLayout.createSequentialGroup()
+                                .addComponent(btn_save_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(btn_edit_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(btn_hapus_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_back_kamar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(kamarLayout.createSequentialGroup()
-                .addComponent(btn_back_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         kamarLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel22, jLabel23, jLabel24, jLabel25});
@@ -1283,9 +1389,9 @@ public class ADMIN extends javax.swing.JFrame {
                             .addComponent(btn_edit_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_hapus_kamar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back_kamar)
-                .addGap(21, 21, 21))
+                .addGap(30, 30, 30))
         );
 
         kamarLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel22, jLabel23, jLabel24, jLabel25, txt_nomor_kamar});
@@ -1296,83 +1402,116 @@ public class ADMIN extends javax.swing.JFrame {
 
         laporan.setBackground(new java.awt.Color(255, 255, 255));
 
-        btn_back_laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_back.png"))); // NOI18N
-        btn_back_laporan.setToolTipText("Menu");
-        btn_back_laporan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_back_laporan.addMouseListener(new java.awt.event.MouseAdapter() {
+        pemesanan.setBackground(new java.awt.Color(255, 255, 255));
+        pemesanan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pemesanan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_back_laporanMouseClicked(evt);
+                pemesananMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                pemesananMouseEntered(evt);
             }
         });
 
-        jLabel65.setFont(new java.awt.Font("Segoe UI Semibold", 0, 20)); // NOI18N
-        jLabel65.setForeground(new java.awt.Color(50, 55, 61));
-        jLabel65.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel65.setText("Laporan");
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/data_chart_pemesanan.png"))); // NOI18N
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(50, 55, 61));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Pemesanan");
+
+        javax.swing.GroupLayout pemesananLayout = new javax.swing.GroupLayout(pemesanan);
+        pemesanan.setLayout(pemesananLayout);
+        pemesananLayout.setHorizontalGroup(
+            pemesananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pemesananLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pemesananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pemesananLayout.setVerticalGroup(
+            pemesananLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pemesananLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        penerimaan.setBackground(new java.awt.Color(255, 255, 255));
+        penerimaan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        penerimaan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                penerimaanMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                penerimaanMouseEntered(evt);
+            }
+        });
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/data_chart_money.png"))); // NOI18N
+
+        jLabel19.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(50, 55, 61));
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("Penerimaan");
+
+        javax.swing.GroupLayout penerimaanLayout = new javax.swing.GroupLayout(penerimaan);
+        penerimaan.setLayout(penerimaanLayout);
+        penerimaanLayout.setHorizontalGroup(
+            penerimaanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(penerimaanLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(penerimaanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        penerimaanLayout.setVerticalGroup(
+            penerimaanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(penerimaanLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jLabel66.setFont(new java.awt.Font("Segoe UI Semibold", 0, 20)); // NOI18N
+        jLabel66.setForeground(new java.awt.Color(50, 55, 61));
+        jLabel66.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel66.setText("Laporan");
 
         javax.swing.GroupLayout laporanLayout = new javax.swing.GroupLayout(laporan);
         laporan.setLayout(laporanLayout);
         laporanLayout.setHorizontalGroup(
             laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, laporanLayout.createSequentialGroup()
-                .addContainerGap(641, Short.MAX_VALUE)
-                .addComponent(btn_back_laporan)
-                .addContainerGap(641, Short.MAX_VALUE))
-            .addComponent(jLabel65, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(laporanLayout.createSequentialGroup()
+                .addContainerGap(320, Short.MAX_VALUE)
+                .addComponent(pemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(penerimaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(320, Short.MAX_VALUE))
+            .addComponent(jLabel66, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         laporanLayout.setVerticalGroup(
             laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(laporanLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(jLabel65)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 466, Short.MAX_VALUE)
-                .addComponent(btn_back_laporan)
-                .addGap(25, 25, 25))
+                .addComponent(jLabel66, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(153, 153, 153)
+                .addGroup(laporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(penerimaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(213, Short.MAX_VALUE))
         );
-
-        laporanLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_back_laporan, jLabel65});
 
         main_panel.add(laporan, "card3");
-
-        diagram.setBackground(new java.awt.Color(255, 255, 255));
-
-        btn_back_diagram.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/hotel/images/btn_back.png"))); // NOI18N
-        btn_back_diagram.setToolTipText("Menu");
-        btn_back_diagram.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btn_back_diagram.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_back_diagramMouseClicked(evt);
-            }
-        });
-
-        jLabel66.setFont(new java.awt.Font("Segoe UI Semibold", 0, 20)); // NOI18N
-        jLabel66.setForeground(new java.awt.Color(50, 55, 61));
-        jLabel66.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel66.setText("Diagram");
-
-        javax.swing.GroupLayout diagramLayout = new javax.swing.GroupLayout(diagram);
-        diagram.setLayout(diagramLayout);
-        diagramLayout.setHorizontalGroup(
-            diagramLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(diagramLayout.createSequentialGroup()
-                .addContainerGap(641, Short.MAX_VALUE)
-                .addComponent(btn_back_diagram)
-                .addContainerGap(641, Short.MAX_VALUE))
-            .addComponent(jLabel66, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        diagramLayout.setVerticalGroup(
-            diagramLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(diagramLayout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addComponent(jLabel66)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 466, Short.MAX_VALUE)
-                .addComponent(btn_back_diagram)
-                .addGap(25, 25, 25))
-        );
-
-        diagramLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_back_diagram, jLabel66});
-
-        main_panel.add(diagram, "card3");
 
         javax.swing.GroupLayout full_bodyLayout = new javax.swing.GroupLayout(full_body);
         full_body.setLayout(full_bodyLayout);
@@ -1409,7 +1548,6 @@ public class ADMIN extends javax.swing.JFrame {
         resetColor(panel_akun);
         resetColor(panel_kamar);
         resetColor(panel_laporan);
-        resetColor(panel_chart);
     }//GEN-LAST:event_panel_pegawaiMouseEntered
 
     private void panel_akunMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_akunMouseEntered
@@ -1417,7 +1555,6 @@ public class ADMIN extends javax.swing.JFrame {
         setColor(panel_akun);
         resetColor(panel_kamar);
         resetColor(panel_laporan);
-        resetColor(panel_chart);
     }//GEN-LAST:event_panel_akunMouseEntered
 
     private void panel_kamarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_kamarMouseEntered
@@ -1425,7 +1562,6 @@ public class ADMIN extends javax.swing.JFrame {
         resetColor(panel_akun);
         setColor(panel_kamar);
         resetColor(panel_laporan);
-        resetColor(panel_chart);
     }//GEN-LAST:event_panel_kamarMouseEntered
 
     private void panel_laporanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_laporanMouseEntered
@@ -1433,23 +1569,13 @@ public class ADMIN extends javax.swing.JFrame {
         resetColor(panel_akun);
         resetColor(panel_kamar);
         setColor(panel_laporan);
-        resetColor(panel_chart);
     }//GEN-LAST:event_panel_laporanMouseEntered
-
-    private void panel_chartMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_chartMouseEntered
-        resetColor(panel_pegawai);
-        resetColor(panel_akun);
-        resetColor(panel_kamar);
-        resetColor(panel_laporan);
-        setColor(panel_chart);
-    }//GEN-LAST:event_panel_chartMouseEntered
 
     private void main_panelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_main_panelMouseEntered
         resetColor(panel_pegawai);
         resetColor(panel_akun);
         resetColor(panel_kamar);
         resetColor(panel_laporan);
-        resetColor(panel_chart);
     }//GEN-LAST:event_main_panelMouseEntered
 
     private void cmb_posisi_pegawaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_posisi_pegawaiActionPerformed
@@ -1462,16 +1588,7 @@ public class ADMIN extends javax.swing.JFrame {
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(false);
-        diagram.setVisible(false);
     }//GEN-LAST:event_panel_pegawaiMouseClicked
-
-    private void btn_back_pegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_pegawaiMouseClicked
-        toMenu();
-    }//GEN-LAST:event_btn_back_pegawaiMouseClicked
-
-    private void btn_back_akunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_akunMouseClicked
-        toMenu();
-    }//GEN-LAST:event_btn_back_akunMouseClicked
 
     private void panel_akunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_akunMouseClicked
         menu.setVisible(false);
@@ -1479,7 +1596,6 @@ public class ADMIN extends javax.swing.JFrame {
         akun.setVisible(true);
         kamar.setVisible(false);
         laporan.setVisible(false);
-        diagram.setVisible(false);
     }//GEN-LAST:event_panel_akunMouseClicked
 
     private void btn_back_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_kamarMouseClicked
@@ -1494,21 +1610,12 @@ public class ADMIN extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmb_status_kamarActionPerformed
 
-    private void btn_back_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_laporanMouseClicked
-        toMenu();
-    }//GEN-LAST:event_btn_back_laporanMouseClicked
-
-    private void btn_back_diagramMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_diagramMouseClicked
-        toMenu();
-    }//GEN-LAST:event_btn_back_diagramMouseClicked
-
     private void panel_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_kamarMouseClicked
         menu.setVisible(false);
         pegawai.setVisible(false);
         akun.setVisible(false);
         kamar.setVisible(true);
         laporan.setVisible(false);
-        diagram.setVisible(false);
     }//GEN-LAST:event_panel_kamarMouseClicked
 
     private void panel_laporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_laporanMouseClicked
@@ -1517,23 +1624,7 @@ public class ADMIN extends javax.swing.JFrame {
         akun.setVisible(false);
         kamar.setVisible(false);
         laporan.setVisible(true);
-        diagram.setVisible(false);
     }//GEN-LAST:event_panel_laporanMouseClicked
-
-    private void panel_chartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_chartMouseClicked
-        menu.setVisible(false);
-        pegawai.setVisible(false);
-        akun.setVisible(false);
-        kamar.setVisible(false);
-        laporan.setVisible(false);
-        diagram.setVisible(true);
-    }//GEN-LAST:event_panel_chartMouseClicked
-
-    private void btn_logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_logoutMouseClicked
-        LOGIN login = new LOGIN();
-        login.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btn_logoutMouseClicked
 
     private void pegawaiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pegawaiMouseEntered
         tampil_pegawai();
@@ -1568,23 +1659,23 @@ public class ADMIN extends javax.swing.JFrame {
     }//GEN-LAST:event_kamarMouseEntered
 
     private void btn_edit_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_edit_kamarMouseClicked
-    ubah_kamar();
+        ubah_kamar();
     }//GEN-LAST:event_btn_edit_kamarMouseClicked
 
     private void tb_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_kamarMouseClicked
-    klik_kamar();
+        klik_kamar();
     }//GEN-LAST:event_tb_kamarMouseClicked
 
     private void btn_hapus_kamarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_hapus_kamarMouseClicked
         try {
             admin_kamar_dao dao = new admin_kamar_dao();
             admin_kamar_getset gs = new admin_kamar_getset();
-            
+
             gs.setNomorkamar(Integer.parseInt(txt_nomor_kamar.getText()));
-            dao.hapusDataKamar(gs); 
-            
+            dao.hapusDataKamar(gs);
+
             tampil_kamar();
-            
+
             txt_nomor_kamar.setEditable(true);
             txt_nomor_kamar.setText("");
             txt_lantai_kamar.setText("");
@@ -1599,18 +1690,18 @@ public class ADMIN extends javax.swing.JFrame {
         try {
             admin_pegawai_dao dao = new admin_pegawai_dao();
             admin_pegawai_getset gs = new admin_pegawai_getset();
-            
+
             gs.setId_pegawai(txt_id_pegawai.getText());
-            dao.hapusDataPegawai(gs); 
-            
+            dao.hapusDataPegawai(gs);
+
             admin_akun_dao dao1 = new admin_akun_dao();
             admin_akun_getset gs1 = new admin_akun_getset();
-            
+
             gs1.setId(txt_id_pegawai.getText());
-            dao1.hapusDataAkun(gs1); 
-            
+            dao1.hapusDataAkun(gs1);
+
             tampil_pegawai();
-            
+
             txt_id_pegawai.setEditable(true);
             txt_id_pegawai.setText("");
             txt_nama_pegawai.setText("");
@@ -1631,6 +1722,38 @@ public class ADMIN extends javax.swing.JFrame {
     private void tb_akunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_akunMouseClicked
         klik_akun();
     }//GEN-LAST:event_tb_akunMouseClicked
+
+    private void pemesananMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pemesananMouseClicked
+        chart_reservasi();
+    }//GEN-LAST:event_pemesananMouseClicked
+
+    private void pemesananMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pemesananMouseEntered
+        setColor(pemesanan);
+        resetColor(penerimaan);
+    }//GEN-LAST:event_pemesananMouseEntered
+
+    private void penerimaanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_penerimaanMouseClicked
+        chart_money();
+    }//GEN-LAST:event_penerimaanMouseClicked
+
+    private void penerimaanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_penerimaanMouseEntered
+        resetColor(pemesanan);
+        setColor(penerimaan);
+    }//GEN-LAST:event_penerimaanMouseEntered
+
+    private void btn_logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_logoutMouseClicked
+        LOGIN login = new LOGIN();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btn_logoutMouseClicked
+
+    private void btn_back_akunMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_akunMouseClicked
+        toMenu();
+    }//GEN-LAST:event_btn_back_akunMouseClicked
+
+    private void btn_back_pegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_back_pegawaiMouseClicked
+        toMenu();
+    }//GEN-LAST:event_btn_back_pegawaiMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1670,9 +1793,7 @@ public class ADMIN extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel akun;
     private javax.swing.JLabel btn_back_akun;
-    private javax.swing.JLabel btn_back_diagram;
     private javax.swing.JLabel btn_back_kamar;
-    private javax.swing.JLabel btn_back_laporan;
     private javax.swing.JLabel btn_back_pegawai;
     private javax.swing.JLabel btn_edit_akun;
     private javax.swing.JLabel btn_edit_kamar;
@@ -1685,7 +1806,6 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmb_posisi_pegawai;
     private javax.swing.JComboBox<String> cmb_status_kamar;
     private javax.swing.JComboBox<String> cmb_tipe_kamar;
-    private javax.swing.JPanel diagram;
     private javax.swing.JPanel full_body;
     private javax.swing.ButtonGroup gender_group;
     private javax.swing.JLabel head;
@@ -1694,9 +1814,12 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -1711,11 +1834,9 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
-    private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1724,11 +1845,12 @@ public class ADMIN extends javax.swing.JFrame {
     private javax.swing.JPanel main_panel;
     private javax.swing.JPanel menu;
     private javax.swing.JPanel panel_akun;
-    private javax.swing.JPanel panel_chart;
     private javax.swing.JPanel panel_kamar;
     private javax.swing.JPanel panel_laporan;
     private javax.swing.JPanel panel_pegawai;
     private javax.swing.JPanel pegawai;
+    private javax.swing.JPanel pemesanan;
+    private javax.swing.JPanel penerimaan;
     private javax.swing.JRadioButton rdo_lk;
     private javax.swing.JRadioButton rdo_pr;
     private javax.swing.JTable tb_akun;

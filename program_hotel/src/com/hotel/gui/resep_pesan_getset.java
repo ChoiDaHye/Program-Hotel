@@ -8,14 +8,41 @@ public class resep_pesan_getset {
     private String notelp;
     
     private String booking;
+    private String booking2;
     private String tglin;
     private String tglout;
+    private String tglr;
     private String sr;
     private String dr;
     private String fr;
+    private int lm;
     
     private String st;
     private String har;
+
+    public String getBooking2() {
+        return booking2;
+    }
+
+    public void setBooking2(String booking2) {
+        this.booking2 = booking2;
+    }
+
+    public String getTglr() {
+        return tglr;
+    }
+
+    public void setTglr(String tglr) {
+        this.tglr = tglr;
+    }
+
+    public int getLm() {
+        return lm;
+    }
+
+    public void setLm(int lm) {
+        this.lm = lm;
+    }
 
     public String getSt() {
         return st;

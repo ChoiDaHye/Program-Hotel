@@ -31,7 +31,7 @@ public class admin_pegawai_dao {
             JOptionPane.showMessageDialog(null, "Data Pegawai Ditambahkan!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Menambah Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
@@ -49,7 +49,7 @@ public class admin_pegawai_dao {
             JOptionPane.showMessageDialog(null, "Data Pegawai Diubah!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Mengubah Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Mengubah Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
@@ -62,7 +62,7 @@ public class admin_pegawai_dao {
             JOptionPane.showMessageDialog(null, "Data Pegawai Dihapus!");
             return true;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Kegagalan Menghapus Data!\n" + e);
+            JOptionPane.showMessageDialog(null, "Kegagalan Menghapus Data!\n" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
         return false;
     }
