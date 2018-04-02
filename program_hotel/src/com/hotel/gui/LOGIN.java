@@ -176,7 +176,7 @@ public class LOGIN extends javax.swing.JFrame {
             st = conn.createStatement();
             rs = st.executeQuery(sql);
 
-            RESEPSIONIS resep = new RESEPSIONIS();
+            RESEPSIONIS resep = new RESEPSIONIS(user);
             ADMIN admin = new ADMIN();
 
             if (rs.next()) {

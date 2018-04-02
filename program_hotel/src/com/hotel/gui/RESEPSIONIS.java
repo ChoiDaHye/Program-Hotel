@@ -31,16 +31,30 @@ public class RESEPSIONIS extends javax.swing.JFrame {
     private static final Random RND = new Random(System.currentTimeMillis());
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    String idku, namaku;
 
     /**
      * Creates new form ADMIN
      */
-    public RESEPSIONIS() {
+    public RESEPSIONIS(String id) {
         initComponents();
         setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
         tb_sr();
         tb_dr();
         tb_fr();
+        
+        try {
+            String sql = "SELECT id_karyawan, nama FROM tb_pegawai WHERE id_karyawan = '"+id+"'";
+            Connection konek = new com.hotel.script.koneksi().getCon();
+
+            Statement st = konek.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while(rs.next()){
+               idku = rs.getString("id_karyawan");
+               namaku = rs.getString("nama");
+            }
+        } catch (Exception e) {
+        }
     }
 
     void setColor(JPanel panel) {
@@ -353,6 +367,8 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                 bw.newLine();
                 bw.write("LAMA INAP     : " + rs.getString("a.lama"));
                 bw.newLine();
+                bw.write("DILAYANI OLEH : " + idku + " - " + namaku.toUpperCase());
+                bw.newLine();
                 bw.write("----------------------------------------------------");
                 bw.newLine();
             }
@@ -409,6 +425,7 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                         + "CHECK OUT\t\t: " + rs.getString("a.t_out") + "\n"
                         + "PEMESAN\t\t: " + rs.getString("b.nama") + "\n"
                         + "LAMA INAP\t\t: " + rs.getString("a.lama") + " Hari\n"
+                        + "DILAYANI OLEH\t: " + idku + " - " + namaku.toUpperCase() + " Hari\n"
                         + "==========================================\n";
 
                 cetak2 = "-------------------------------------------------------------------------\n"
@@ -472,6 +489,8 @@ public class RESEPSIONIS extends javax.swing.JFrame {
                 bw.write("PEMESAN           : " + rs.getString("b.nama"));
                 bw.newLine();
                 bw.write("LAMA INAP         : " + rs.getString("a.lama") + " Hari");
+                bw.newLine();
+                bw.write("DILAYANI OLEH     : " + idku + " - " + namaku.toUpperCase());
                 bw.newLine();
                 bw.write("====================================================");
                 bw.newLine();
@@ -2450,7 +2469,7 @@ public class RESEPSIONIS extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RESEPSIONIS().setVisible(true);
+                
             }
         });
     }
